@@ -9,12 +9,12 @@ interface HeadingProps extends HTMLAttributes<HTMLElement> {
 const headingVariants = cva('', {
   variants: {
     level: {
-      h1: 'text-3xl md:text-4xl lg:text-5xl font-bold',
-      h2: 'text-2xl md:text-3xl lg:text-4xl font-semibold',
-      h3: 'text-xl md:text-2xl lg:text-3xl font-semibold',
-      h4: 'text-lg md:text-xl lg:text-2xl font-medium',
-      h5: 'text-base md:text-lg lg:text-xl font-medium',
-      h6: 'text-sm md:text-base lg:text-lg font-medium',
+      h1: 'text-4xl font-bold',
+      h2: 'text-3xl font-semibold',
+      h3: 'text-2xl font-semibold',
+      h4: 'text-xl font-medium',
+      h5: 'text-lg font-medium',
+      h6: 'text-base font-medium',
     },
   },
   defaultVariants: {
