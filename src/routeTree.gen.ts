@@ -9,11 +9,25 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as KatakanaRouteImport } from './routes/katakana'
+import { Route as HiraganaRouteImport } from './routes/hiragana'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as KatakanaLetterRouteImport } from './routes/katakana_.$letter'
+import { Route as HiraganaLetterRouteImport } from './routes/hiragana_.$letter'
 import { Route as ApiSplatRouteImport } from './routes/api.$'
 import { Route as ApiRpcSplatRouteImport } from './routes/api.rpc.$'
 
+const KatakanaRoute = KatakanaRouteImport.update({
+  id: '/katakana',
+  path: '/katakana',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HiraganaRoute = HiraganaRouteImport.update({
+  id: '/hiragana',
+  path: '/hiragana',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -22,6 +36,16 @@ const AboutRoute = AboutRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KatakanaLetterRoute = KatakanaLetterRouteImport.update({
+  id: '/katakana_/$letter',
+  path: '/katakana/$letter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HiraganaLetterRoute = HiraganaLetterRouteImport.update({
+  id: '/hiragana_/$letter',
+  path: '/hiragana/$letter',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSplatRoute = ApiSplatRouteImport.update({
@@ -38,39 +62,94 @@ const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/hiragana': typeof HiraganaRoute
+  '/katakana': typeof KatakanaRoute
   '/api/$': typeof ApiSplatRoute
+  '/hiragana/$letter': typeof HiraganaLetterRoute
+  '/katakana/$letter': typeof KatakanaLetterRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/hiragana': typeof HiraganaRoute
+  '/katakana': typeof KatakanaRoute
   '/api/$': typeof ApiSplatRoute
+  '/hiragana/$letter': typeof HiraganaLetterRoute
+  '/katakana/$letter': typeof KatakanaLetterRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/hiragana': typeof HiraganaRoute
+  '/katakana': typeof KatakanaRoute
   '/api/$': typeof ApiSplatRoute
+  '/hiragana_/$letter': typeof HiraganaLetterRoute
+  '/katakana_/$letter': typeof KatakanaLetterRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/api/$' | '/api/rpc/$'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/hiragana'
+    | '/katakana'
+    | '/api/$'
+    | '/hiragana/$letter'
+    | '/katakana/$letter'
+    | '/api/rpc/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/api/$' | '/api/rpc/$'
-  id: '__root__' | '/' | '/about' | '/api/$' | '/api/rpc/$'
+  to:
+    | '/'
+    | '/about'
+    | '/hiragana'
+    | '/katakana'
+    | '/api/$'
+    | '/hiragana/$letter'
+    | '/katakana/$letter'
+    | '/api/rpc/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/hiragana'
+    | '/katakana'
+    | '/api/$'
+    | '/hiragana_/$letter'
+    | '/katakana_/$letter'
+    | '/api/rpc/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  HiraganaRoute: typeof HiraganaRoute
+  KatakanaRoute: typeof KatakanaRoute
   ApiSplatRoute: typeof ApiSplatRoute
+  HiraganaLetterRoute: typeof HiraganaLetterRoute
+  KatakanaLetterRoute: typeof KatakanaLetterRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/katakana': {
+      id: '/katakana'
+      path: '/katakana'
+      fullPath: '/katakana'
+      preLoaderRoute: typeof KatakanaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hiragana': {
+      id: '/hiragana'
+      path: '/hiragana'
+      fullPath: '/hiragana'
+      preLoaderRoute: typeof HiraganaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -83,6 +162,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/katakana_/$letter': {
+      id: '/katakana_/$letter'
+      path: '/katakana/$letter'
+      fullPath: '/katakana/$letter'
+      preLoaderRoute: typeof KatakanaLetterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hiragana_/$letter': {
+      id: '/hiragana_/$letter'
+      path: '/hiragana/$letter'
+      fullPath: '/hiragana/$letter'
+      preLoaderRoute: typeof HiraganaLetterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/$': {
@@ -105,7 +198,11 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  HiraganaRoute: HiraganaRoute,
+  KatakanaRoute: KatakanaRoute,
   ApiSplatRoute: ApiSplatRoute,
+  HiraganaLetterRoute: HiraganaLetterRoute,
+  KatakanaLetterRoute: KatakanaLetterRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
 }
 export const routeTree = rootRouteImport
