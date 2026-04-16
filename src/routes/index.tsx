@@ -1,21 +1,30 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { Heading } from '@/components/shared/heading';
+import { createFileRoute, Link } from '@tanstack/react-router';
+import Hero from '@/components/shared/hero';
 import { Button } from '@/components/ui/button';
-import { PROJECT_NAME_HIRAGANA } from '@/infra/lib/constants';
+import { PROJECT_NAME, PROJECT_NAME_HIRAGANA } from '@/infra/lib/constants';
 
 export const Route = createFileRoute('/')({ component: App });
 
 function App() {
+  const description =
+    'Platform for learning how to write and read Japanese characters, including Hiragana and Katakana.';
+
   return (
     <main>
-      <Heading className='font-sans-jp'>{PROJECT_NAME_HIRAGANA}</Heading>
-      <Button>{PROJECT_NAME_HIRAGANA}</Button>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, adipisci
-        aperiam rerum error ipsam sequi, beatae esse a cumque, repudiandae nihil
-        suscipit voluptate ducimus! Necessitatibus non vel sed assumenda
-        facilis?
-      </p>
+      <Hero
+        badge={PROJECT_NAME_HIRAGANA}
+        heading={PROJECT_NAME}
+        description={description}
+      >
+        <div className='space-x-4'>
+          <Button asChild>
+            <Link to='/hiragana'>あ Hiragana</Link>
+          </Button>
+          <Button asChild>
+            <Link to='/katakana'>ア Katakana</Link>
+          </Button>
+        </div>
+      </Hero>
     </main>
   );
 }
