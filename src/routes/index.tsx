@@ -70,7 +70,7 @@ function App() {
         <img
           src='/hougetsu.png'
           alt='Hougetsu wangy-wangy'
-          className='mx-auto'
+          className='mx-auto dark:invert'
         />
       </section>
 
