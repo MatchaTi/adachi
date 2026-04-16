@@ -1,0 +1,80 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+export type KanaCategory = 'hiragana' | 'katakana';
+
+export type KanaGraphic = {
+  character: string;
+  strokes: string[];
+  medians: number[][][];
+  romaji: string;
+  category: KanaCategory;
+};
+
+const graphicsPath = resolve(process.cwd(), 'public', 'graphicsJaKana.txt');
+
+function getKanaCategory(character: string): KanaCategory {
+  const codePoint = character.codePointAt(0);
+
+  if (codePoint === undefined) {
+    throw new Error('Kana character is required');
+  }
+
+  if (codePoint >= 0x3040 && codePoint <= 0x309f) {
+    return 'hiragana';
+  }
+
+  if (codePoint >= 0x30a0 && codePoint <= 0x30ff) {
+    return 'katakana';
+  }
+
+  throw new Error(`Unsupported kana character: ${character}`);
+}
+
+function readKanaGraphics(): KanaGraphic[] {
+  return readFileSync(graphicsPath, 'utf8')
+    .trim()
+    .split(/\r?\n/)
+    .filter(Boolean)
+    .map((line) => {
+      const graphic = JSON.parse(line) as Omit<KanaGraphic, 'category'>;
+
+      return {
+        ...graphic,
+        category: getKanaCategory(graphic.character),
+      };
+    });
+}
+
+const kanaGraphics = readKanaGraphics();
+
+function findKanaGraphic(category: KanaCategory, character: string) {
+  return kanaGraphics.find(
+    (graphic) =>
+      graphic.category === category && graphic.character === character,
+  );
+}
+
+export function getAllKanaGraphics(category: KanaCategory) {
+  return kanaGraphics.filter((graphic) => graphic.category === category);
+}
+
+export function getKanaGraphic(category: KanaCategory, character: string) {
+  return findKanaGraphic(category, character);
+}
+
+export function getAllHiraganaGraphics() {
+  return getAllKanaGraphics('hiragana');
+}
+
+export function getHiraganaGraphic(character: string) {
+  return getKanaGraphic('hiragana', character);
+}
+
+export function getAllKatakanaGraphics() {
+  return getAllKanaGraphics('katakana');
+}
+
+export function getKatakanaGraphic(character: string) {
+  return getKanaGraphic('katakana', character);
+}
