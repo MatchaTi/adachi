@@ -11,7 +11,9 @@ export default function Footer() {
           <p className='m-0 text-sm'>
             &copy; {year} MatchaTi. All rights reserved.
           </p>
-          <p className='island-kicker m-0'>Built with TanStack Start</p>
+          <p className='island-kicker m-0'>
+            Built with TanStack Start + oRPC + Shadcn + Hanzi Writer
+          </p>
         </div>
 
         <Button asChild variant={'ghost'}>
