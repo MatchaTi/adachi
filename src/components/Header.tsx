@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 
 export default function Header() {
   return (
-    <header className='grid grid-cols-3 px-4 lg:px-80 mt-10'>
+    <header className='grid grid-cols-3'>
       <Button asChild variant={'ghost'} className='w-fit'>
         <Link to='/'>
           <h2 className='font-sans-jp'>{PROJECT_NAME_HIRAGANA}</h2>

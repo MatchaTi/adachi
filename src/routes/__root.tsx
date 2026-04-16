@@ -1,13 +1,11 @@
-import { TanStackDevtools } from '@tanstack/react-devtools';
 import type { QueryClient } from '@tanstack/react-query';
 import {
   createRootRouteWithContext,
   HeadContent,
   Scripts,
 } from '@tanstack/react-router';
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
+import Header from '@/components/Header';
 import { PROJECT_NAME } from '@/infra/lib/constants';
-import TanStackQueryDevtools from '../integrations/tanstack-query/devtools';
 import appCss from '../styles.css?url';
 
 interface MyRouterContext {
@@ -47,20 +45,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className='bg-background text-foreground'>
+      <body className='bg-background text-foreground space-y-12 px-4 lg:px-80 lg:px-80 mt-10'>
+        <Header />
         {children}
-        <TanStackDevtools
-          config={{
-            position: 'bottom-right',
-          }}
-          plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-            TanStackQueryDevtools,
-          ]}
-        />
         <Scripts />
       </body>
     </html>

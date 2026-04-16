@@ -9,7 +9,7 @@ type Props = {
 
 export default function Hero({ heading, badge, description, children }: Props) {
   return (
-    <div className='space-y-12 px-4 lg:px-80 mt-10 lg:mt-20'>
+    <div className='space-y-12 mt-10 lg:mt-20'>
       <Heading
         level='h2'
         className='font-sans-jp bg-foreground w-fit text-background'
