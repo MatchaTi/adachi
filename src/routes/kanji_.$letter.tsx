@@ -1,8 +1,10 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, PencilLine, RotateCcw } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/kanji_/$letter')({
@@ -25,7 +27,115 @@ function RouteComponent() {
     }),
   );
 
-  const unicodeCodepoint = `U+${kanji.character.codePointAt(0)?.toString(16).toUpperCase()}`;
+  const [mode, setMode] = useState<'learn' | 'write'>('learn');
+  const [isWriterReady, setIsWriterReady] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const writerContainerRef = useRef<HTMLDivElement>(null);
+  const writerRef = useRef<{
+    animateCharacter: () => unknown;
+    loopCharacterAnimation: () => void;
+    quiz: (options?: Record<string, unknown>) => void;
+    cancelQuiz: () => void;
+  } | null>(null);
+  const writerSize = 260;
+
+  useEffect(() => {
+    let disposed = false;
+
+    async function setupWriter() {
+      if (!writerContainerRef.current) {
+        return;
+      }
+
+      setLoadError(null);
+      setIsWriterReady(false);
+      writerContainerRef.current.innerHTML = '';
+
+      try {
+        const module = await import('hanzi-writer');
+
+        if (disposed || !writerContainerRef.current) {
+          return;
+        }
+
+        const writer = module.default.create(
+          writerContainerRef.current,
+          kanji.character,
+          {
+            width: writerSize,
+            height: writerSize,
+            padding: 20,
+            strokeAnimationSpeed: 1,
+            delayBetweenStrokes: 250,
+            charDataLoader: () => ({
+              strokes: kanji.strokes,
+              medians: kanji.medians,
+            }),
+          },
+        );
+
+        writerRef.current = writer;
+        setIsWriterReady(true);
+      } catch {
+        setLoadError('Failed to load Hanzi Writer. Please refresh the page.');
+      }
+    }
+
+    setupWriter();
+
+    return () => {
+      disposed = true;
+      writerRef.current?.cancelQuiz();
+      writerRef.current = null;
+    };
+  }, [kanji.character, kanji.medians, kanji.strokes]);
+
+  useEffect(() => {
+    if (!isWriterReady || !writerRef.current) {
+      return;
+    }
+
+    const writer = writerRef.current;
+    writer.cancelQuiz();
+
+    if (mode === 'learn') {
+      void writer.animateCharacter();
+      writer.loopCharacterAnimation();
+      return;
+    }
+
+    writer.quiz({
+      showHintAfterMisses: 1,
+      leniency: 1,
+    });
+  }, [mode, isWriterReady]);
+
+  const replayAnimation = () => {
+    if (!writerRef.current) {
+      return;
+    }
+
+    writerRef.current.cancelQuiz();
+    void writerRef.current.animateCharacter();
+  };
+
+  const restartQuiz = () => {
+    if (!writerRef.current) {
+      return;
+    }
+
+    writerRef.current.cancelQuiz();
+    writerRef.current.quiz({
+      showHintAfterMisses: 1,
+      leniency: 1,
+    });
+  };
+
+  const strokeCount = kanji.strokes.length;
+  const unicodeCodepoint = `U+${kanji.character
+    .codePointAt(0)
+    ?.toString(16)
+    .toUpperCase()}`;
 
   return (
     <main className='mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8'>
@@ -54,61 +164,82 @@ function RouteComponent() {
               {unicodeCodepoint}
             </span>
             <span className='border border-border/70 px-2 py-1 text-right'>
-              {kanji.strokes} strokes
+              {strokeCount} strokes
             </span>
           </div>
         </Card>
 
         <section className='space-y-4 border-y border-border/70 py-2 lg:px-2'>
           <p className='text-xs tracking-[0.2em] text-muted-foreground uppercase'>
-            Meaning
+            Character
           </p>
           <h1 className='font-sans-jp text-5xl leading-tight sm:text-6xl'>
             {kanji.character}
           </h1>
-          <p className='text-4xl leading-tight capitalize'>{kanji.meaning}</p>
+          <p className='text-4xl leading-tight'>{kanji.romaji || '-'}</p>
           <div className='h-px w-24 bg-border' />
+          <p className='max-w-2xl text-base leading-7 text-foreground'>
+            {kanji.arti || '-'}
+          </p>
           <p className='max-w-2xl text-sm leading-7 text-muted-foreground'>
-            Review this kanji with both readings. Use{' '}
-            <span className='font-medium text-foreground'>on&apos;yomi</span>{' '}
-            for Chinese-derived pronunciation patterns and{' '}
-            <span className='font-medium text-foreground'>kun&apos;yomi</span>{' '}
-            for native Japanese readings.
+            Use learn mode to follow the animated stroke order, then switch to
+            write mode to practice the character directly on the canvas.
           </p>
         </section>
 
-        <Card className='rounded-none border-border bg-card/70 p-4 shadow-none'>
-          <p className='mb-3 text-xs tracking-[0.2em] text-muted-foreground uppercase'>
-            Readings
+        <Card className='border-border bg-card/70 p-3 shadow-none rounded-none'>
+          <p className='mb-2 text-xs tracking-[0.2em] text-muted-foreground uppercase'>
+            Stroke Order
           </p>
-          <div className='space-y-3 text-sm'>
-            <div className='border border-border/70 p-3'>
-              <p className='text-xs text-muted-foreground uppercase tracking-wider'>
-                On&apos;yomi
-              </p>
-              <p className='mt-1'>{kanji.onyomi}</p>
-            </div>
-            <div className='border border-border/70 p-3'>
-              <p className='text-xs text-muted-foreground uppercase tracking-wider'>
-                Kun&apos;yomi
-              </p>
-              <p className='mt-1'>{kanji.kunyomi}</p>
-            </div>
-            <div className='grid grid-cols-2 gap-2'>
-              <div className='border border-border/70 p-3'>
-                <p className='text-xs text-muted-foreground uppercase tracking-wider'>
-                  JLPT
-                </p>
-                <p className='mt-1'>{kanji.jlpt}</p>
-              </div>
-              <div className='border border-border/70 p-3'>
-                <p className='text-xs text-muted-foreground uppercase tracking-wider'>
-                  Grade
-                </p>
-                <p className='mt-1'>{kanji.grade}</p>
-              </div>
-            </div>
+          <div className='rounded-md border border-border/70 p-2'>
+            <div
+              ref={writerContainerRef}
+              className='mx-auto flex h-[260px] w-[260px] max-w-full items-center justify-center bg-background'
+            />
           </div>
+
+          {loadError ? (
+            <p className='mt-3 text-sm text-destructive'>{loadError}</p>
+          ) : null}
+
+          {!isWriterReady && !loadError ? (
+            <p className='mt-3 text-sm text-muted-foreground'>
+              Preparing canvas...
+            </p>
+          ) : null}
+
+          <Tabs
+            value={mode}
+            onValueChange={(value) => setMode(value as 'learn' | 'write')}
+            className='mt-4 gap-3'
+          >
+            <TabsList className='w-full'>
+              <TabsTrigger value='learn'>Learn</TabsTrigger>
+              <TabsTrigger value='write'>Write</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value='learn' className='mt-0'>
+              <Button
+                onClick={replayAnimation}
+                disabled={!isWriterReady}
+                className='w-full'
+              >
+                <RotateCcw />
+                Replay Animation
+              </Button>
+            </TabsContent>
+
+            <TabsContent value='write' className='mt-0'>
+              <Button
+                onClick={restartQuiz}
+                disabled={!isWriterReady}
+                className='w-full'
+              >
+                <PencilLine />
+                Restart Quiz
+              </Button>
+            </TabsContent>
+          </Tabs>
         </Card>
       </section>
     </main>

@@ -1,12 +1,13 @@
 import { ORPCError } from '@orpc/server';
 import { baseRouter } from '@/orpc/base';
-import { kanaCharacterSchema } from './letter-schema';
+import { kanaCharacterSchema, kanjiPageQuerySchema } from './letter-schema';
 import {
   findHiragana,
   findKanji,
   findKatakana,
   listHiragana,
   listKanji,
+  listKanjiPage,
   listKatakana,
 } from './letter-services';
 
@@ -50,6 +51,12 @@ export const getAllKanji = baseRouter.handler(() => {
   return listKanji();
 });
 
+export const getKanjiPage = baseRouter
+  .input(kanjiPageQuerySchema)
+  .handler(({ input }) => {
+    return listKanjiPage(input);
+  });
+
 export const getKanji = baseRouter
   .input(kanaCharacterSchema)
   .handler(({ input }) => {
@@ -70,5 +77,6 @@ export const letterRouter = {
   getAllKatakana,
   getKatakana,
   getAllKanji,
+  getKanjiPage,
   getKanji,
 };

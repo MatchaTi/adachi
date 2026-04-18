@@ -13,12 +13,11 @@ export type KanaGraphic = {
 
 export type KanjiGraphic = {
   character: string;
+  strokes: string[];
+  medians: number[][][];
+  romaji: string;
   meaning: string;
-  onyomi: string;
-  kunyomi: string;
-  strokes: number;
-  jlpt: string;
-  grade: string;
+  arti: string;
 };
 
 const kanaGraphicsPath = resolve(process.cwd(), 'public', 'graphicsJaKana.txt');
