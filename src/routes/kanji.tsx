@@ -11,6 +11,8 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Spinner } from '@/components/ui/spinner';
 import { client } from '@/orpc/client';
 
 export const Route = createFileRoute('/kanji')({
@@ -115,7 +117,22 @@ function RouteComponent() {
 
       {isLoading ? (
         <section className='border-t border-border/70 px-4 py-8'>
-          <p className='text-sm text-muted-foreground'>Loading kanji...</p>
+          <div className='mb-6 flex items-center justify-center gap-2 text-sm text-muted-foreground'>
+            <Spinner className='size-4' />
+            Loading kanji...
+          </div>
+          <div className='grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
+            {Array.from(
+              { length: 10 },
+              (_, index) => `loading-${index + 1}`,
+            ).map((id) => (
+              <div key={id} className='border border-border p-6'>
+                <Skeleton className='mb-4 h-14 w-12' />
+                <Skeleton className='mb-2 h-4 w-20' />
+                <Skeleton className='h-3 w-28' />
+              </div>
+            ))}
+          </div>
         </section>
       ) : null}
 
@@ -129,7 +146,8 @@ function RouteComponent() {
         <section className='border-t border-border/70 px-4 py-6'>
           <div ref={loadMoreRef} className='h-6' />
           {isFetchingNextPage ? (
-            <p className='text-center text-sm text-muted-foreground'>
+            <p className='flex items-center justify-center gap-2 text-center text-sm text-muted-foreground'>
+              <Spinner className='size-4' />
               Loading more...
             </p>
           ) : null}

@@ -11,10 +11,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Spinner } from '@/components/ui/spinner';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/katakana')({
   component: RouteComponent,
+  pendingComponent: RoutePending,
   loader: async ({ context }) => {
     await context.queryClient.fetchQuery(
       orpc.letter.getAllKatakana.queryOptions(),
@@ -22,6 +24,17 @@ export const Route = createFileRoute('/katakana')({
   },
   errorComponent: () => <div>Error Euy</div>,
 });
+
+function RoutePending() {
+  return (
+    <main className='px-4 py-10'>
+      <div className='flex items-center justify-center gap-2 text-sm text-muted-foreground'>
+        <Spinner className='size-4' />
+        Loading katakana...
+      </div>
+    </main>
+  );
+}
 
 function RouteComponent() {
   const { data: katakana } = useSuspenseQuery(
