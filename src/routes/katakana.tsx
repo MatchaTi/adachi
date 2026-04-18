@@ -2,6 +2,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { Search } from 'lucide-react';
 import { useState } from 'react';
+import { useDebounce } from 'use-debounce';
 import Hero from '@/components/shared/hero';
 import {
   Card,
@@ -27,17 +28,18 @@ function RouteComponent() {
     orpc.letter.getAllKatakana.queryOptions(),
   );
   const [search, setSearch] = useState('');
+  const [debouncedSearch] = useDebounce(search, 300);
 
   const description =
     'Primarily used for foreign loanwords, onomatopoeia, and emphasis, Katakana is one of the three Japanese writing systems. It has 46 core characters mirroring Hiragana sounds with a sharper, angular style. Katakana commonly appears in modern Japanese writing for names, technical terms, and borrowed vocabulary from other languages.';
-  const query = search.trim().toLowerCase();
+  const query = debouncedSearch.trim().toLowerCase();
   const filteredKatakana =
     query.length === 0
       ? katakana
       : katakana.filter(
           (char) =>
             char.romaji.toLowerCase().includes(query) ||
-            char.character.includes(search.trim()),
+            char.character.includes(debouncedSearch.trim()),
         );
 
   return (

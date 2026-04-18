@@ -2,6 +2,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { Search } from 'lucide-react';
 import { useState } from 'react';
+import { useDebounce } from 'use-debounce';
 import Hero from '@/components/shared/hero';
 import {
   Card,
@@ -27,17 +28,18 @@ function RouteComponent() {
     orpc.letter.getAllHiragana.queryOptions(),
   );
   const [search, setSearch] = useState('');
+  const [debouncedSearch] = useDebounce(search, 300);
 
   const description =
     'Used for native Japanese words and grammatical elements, Hiragana is the most basic of the three Japanese scripts. It consists of 46 characters, each representing a specific sound. Hiragana is often used in combination with Kanji (Chinese characters) to write Japanese sentences, providing phonetic readings for Kanji and serving as a foundation for learning the language.';
-  const query = search.trim().toLowerCase();
+  const query = debouncedSearch.trim().toLowerCase();
   const filteredHiragana =
     query.length === 0
       ? hiragana
       : hiragana.filter(
           (char) =>
             char.romaji.toLowerCase().includes(query) ||
-            char.character.includes(search.trim()),
+            char.character.includes(debouncedSearch.trim()),
         );
 
   return (

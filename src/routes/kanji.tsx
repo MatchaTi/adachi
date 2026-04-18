@@ -2,6 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { Search } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useDebounce } from 'use-debounce';
 import Hero from '@/components/shared/hero';
 import {
   Card,
@@ -19,7 +20,8 @@ export const Route = createFileRoute('/kanji')({
 
 function RouteComponent() {
   const [search, setSearch] = useState('');
-  const query = search.trim().toLowerCase();
+  const normalizedQuery = search.trim().toLowerCase();
+  const [query] = useDebounce(normalizedQuery, 300);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
