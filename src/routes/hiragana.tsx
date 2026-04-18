@@ -1,5 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, Link } from '@tanstack/react-router';
+import { Search } from 'lucide-react';
 import Hero from '@/components/shared/hero';
 import {
   Card,
@@ -7,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/hiragana')({
@@ -29,7 +31,17 @@ function RouteComponent() {
 
   return (
     <main>
-      <Hero badge='ひらがな' heading='Hiragana' description={description} />
+      <Hero badge='ひらがな' heading='Hiragana' description={description}>
+        <div className='relative max-w-md'>
+          <Search className='pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground' />
+          <Input
+            type='search'
+            placeholder='Search hiragana...'
+            className='pl-9'
+            aria-label='Search hiragana'
+          />
+        </div>
+      </Hero>
 
       <section className='grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
         {hiragana.map((char) => (
