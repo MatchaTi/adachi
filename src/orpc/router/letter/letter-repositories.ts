@@ -11,7 +11,18 @@ export type KanaGraphic = {
   category: KanaCategory;
 };
 
-const graphicsPath = resolve(process.cwd(), 'public', 'graphicsJaKana.txt');
+export type KanjiGraphic = {
+  character: string;
+  meaning: string;
+  onyomi: string;
+  kunyomi: string;
+  strokes: number;
+  jlpt: string;
+  grade: string;
+};
+
+const kanaGraphicsPath = resolve(process.cwd(), 'public', 'graphicsJaKana.txt');
+const kanjiGraphicsPath = resolve(process.cwd(), 'public', 'graphicsJa.txt');
 
 function getKanaCategory(character: string): KanaCategory {
   const codePoint = character.codePointAt(0);
@@ -32,7 +43,7 @@ function getKanaCategory(character: string): KanaCategory {
 }
 
 function readKanaGraphics(): KanaGraphic[] {
-  return readFileSync(graphicsPath, 'utf8')
+  return readFileSync(kanaGraphicsPath, 'utf8')
     .trim()
     .split(/\r?\n/)
     .filter(Boolean)
@@ -47,6 +58,15 @@ function readKanaGraphics(): KanaGraphic[] {
 }
 
 const kanaGraphics = readKanaGraphics();
+const kanjiGraphics = readKanjiGraphics();
+
+function readKanjiGraphics(): KanjiGraphic[] {
+  return readFileSync(kanjiGraphicsPath, 'utf8')
+    .trim()
+    .split(/\r?\n/)
+    .filter(Boolean)
+    .map((line) => JSON.parse(line) as KanjiGraphic);
+}
 
 function findKanaGraphic(category: KanaCategory, character: string) {
   return kanaGraphics.find(
@@ -77,4 +97,12 @@ export function getAllKatakanaGraphics() {
 
 export function getKatakanaGraphic(character: string) {
   return getKanaGraphic('katakana', character);
+}
+
+export function getAllKanjiGraphics() {
+  return kanjiGraphics;
+}
+
+export function getKanjiGraphic(character: string) {
+  return kanjiGraphics.find((graphic) => graphic.character === character);
 }

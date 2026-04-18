@@ -36,6 +36,17 @@ export default function Header() {
             </Button>
           )}
         </Link>
+        <Link to='/kanji'>
+          {({ isActive }) => (
+            <Button
+              variant={isActive ? 'default' : 'outline'}
+              size='sm'
+              className='rounded-full'
+            >
+              漢 <span className='hidden sm:inline'>Kanji</span>
+            </Button>
+          )}
+        </Link>
       </nav>
 
       <div className='flex justify-end gap-2'>
