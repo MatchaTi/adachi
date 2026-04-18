@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
 import Hero from '@/components/shared/hero';
@@ -8,14 +9,23 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { kanjiList } from '@/lib/kanji';
+import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/kanji')({
   component: RouteComponent,
+  loader: async ({ context }) => {
+    await context.queryClient.fetchQuery(
+      orpc.letter.getAllKanji.queryOptions(),
+    );
+  },
+  errorComponent: () => <div>Error</div>,
 });
 
 function RouteComponent() {
   const [query, setQuery] = useState('');
+  const { data: kanjiList } = useSuspenseQuery(
+    orpc.letter.getAllKanji.queryOptions(),
+  );
 
   const description =
     'Kanji are logographic characters used in Japanese writing to express core meanings in words. Start with common beginner kanji and open each detail page to review readings and essential metadata in a focused layout.';
@@ -35,13 +45,14 @@ function RouteComponent() {
         kanji.kunyomi,
         kanji.jlpt,
         kanji.grade,
+        kanji.strokes.toString(),
       ]
         .join(' ')
         .toLowerCase();
 
       return searchable.includes(normalizedQuery);
     });
-  }, [query]);
+  }, [query, kanjiList]);
 
   return (
     <main>

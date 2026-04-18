@@ -1,32 +1,29 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { findKanji } from '@/lib/kanji';
+import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/kanji_/$letter')({
+  loader: async ({ context, params }) => {
+    await context.queryClient.fetchQuery(
+      orpc.letter.getKanji.queryOptions({
+        input: { character: params.letter },
+      }),
+    );
+  },
   component: RouteComponent,
+  errorComponent: () => <div>Error</div>,
 });
 
 function RouteComponent() {
   const { letter } = Route.useParams();
-  const kanji = findKanji(letter);
-
-  if (!kanji) {
-    return (
-      <main className='mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8'>
-        <Button asChild variant='outline' className='w-fit'>
-          <Link to='/kanji'>
-            <ArrowLeft />
-            Back
-          </Link>
-        </Button>
-        <Card className='rounded-none border-border bg-card/70 p-6 shadow-none'>
-          <p className='text-sm text-muted-foreground'>Kanji not found.</p>
-        </Card>
-      </main>
-    );
-  }
+  const { data: kanji } = useSuspenseQuery(
+    orpc.letter.getKanji.queryOptions({
+      input: { character: letter },
+    }),
+  );
 
   const unicodeCodepoint = `U+${kanji.character.codePointAt(0)?.toString(16).toUpperCase()}`;
 
