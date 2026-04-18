@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { Search } from 'lucide-react';
+import { useState } from 'react';
 import Hero from '@/components/shared/hero';
 import {
   Card,
@@ -25,9 +26,19 @@ function RouteComponent() {
   const { data: hiragana } = useSuspenseQuery(
     orpc.letter.getAllHiragana.queryOptions(),
   );
+  const [search, setSearch] = useState('');
 
   const description =
     'Used for native Japanese words and grammatical elements, Hiragana is the most basic of the three Japanese scripts. It consists of 46 characters, each representing a specific sound. Hiragana is often used in combination with Kanji (Chinese characters) to write Japanese sentences, providing phonetic readings for Kanji and serving as a foundation for learning the language.';
+  const query = search.trim().toLowerCase();
+  const filteredHiragana =
+    query.length === 0
+      ? hiragana
+      : hiragana.filter(
+          (char) =>
+            char.romaji.toLowerCase().includes(query) ||
+            char.character.includes(search.trim()),
+        );
 
   return (
     <main>
@@ -39,12 +50,14 @@ function RouteComponent() {
             placeholder='Search hiragana...'
             className='pl-9'
             aria-label='Search hiragana'
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
           />
         </div>
       </Hero>
 
       <section className='grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
-        {hiragana.map((char) => (
+        {filteredHiragana.map((char) => (
           <Link
             to='/hiragana/$letter'
             params={{ letter: char.character }}
