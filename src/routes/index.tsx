@@ -15,9 +15,9 @@ export const Route = createFileRoute('/')({ component: App });
 
 const FEATURE_ITEMS = [
   {
-    title: 'Hiragana & Katakana',
+    title: 'Hiragana, Katakana & Kanji',
     description:
-      'Master 92 essential Japanese characters for basic communication',
+      'Build a strong foundation across the three Japanese writing systems',
     icon: Languages,
   },
   {
@@ -30,7 +30,7 @@ const FEATURE_ITEMS = [
 
 function App() {
   const description =
-    'Platform for learning how to write and read Japanese characters, including Hiragana and Katakana.';
+    'Platform for learning how to write and read Japanese characters, including Hiragana, Katakana, and Kanji.';
 
   return (
     <main className='space-y-24'>
@@ -45,6 +45,9 @@ function App() {
           </Button>
           <Button asChild>
             <Link to='/katakana'>ア Katakana</Link>
+          </Button>
+          <Button asChild>
+            <Link to='/kanji'>漢 Kanji</Link>
           </Button>
         </div>
       </Hero>
