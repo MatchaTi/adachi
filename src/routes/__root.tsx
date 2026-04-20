@@ -45,7 +45,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className='bg-background text-foreground space-y-12 px-4 lg:px-80 lg:px-80 mt-10'>
+      <body
+        className='bg-background text-foreground space-y-12 px-4 lg:px-80 lg:px-80 mt-10'
+        cz-shortcut-listen='true'
+      >
         <Header />
         {children}
         <Scripts />
