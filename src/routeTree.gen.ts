@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as KatakanaRouteImport } from './routes/katakana'
 import { Route as KanjiRouteImport } from './routes/kanji'
 import { Route as HiraganaRouteImport } from './routes/hiragana'
+import { Route as AnalyzeRouteImport } from './routes/analyze'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as KatakanaLetterRouteImport } from './routes/katakana_.$letter'
@@ -33,6 +34,11 @@ const KanjiRoute = KanjiRouteImport.update({
 const HiraganaRoute = HiraganaRouteImport.update({
   id: '/hiragana',
   path: '/hiragana',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyzeRoute = AnalyzeRouteImport.update({
+  id: '/analyze',
+  path: '/analyze',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -74,6 +80,7 @@ const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/analyze': typeof AnalyzeRoute
   '/hiragana': typeof HiraganaRoute
   '/kanji': typeof KanjiRoute
   '/katakana': typeof KatakanaRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/analyze': typeof AnalyzeRoute
   '/hiragana': typeof HiraganaRoute
   '/kanji': typeof KanjiRoute
   '/katakana': typeof KatakanaRoute
@@ -99,6 +107,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/analyze': typeof AnalyzeRoute
   '/hiragana': typeof HiraganaRoute
   '/kanji': typeof KanjiRoute
   '/katakana': typeof KatakanaRoute
@@ -113,6 +122,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/analyze'
     | '/hiragana'
     | '/kanji'
     | '/katakana'
@@ -125,6 +135,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/analyze'
     | '/hiragana'
     | '/kanji'
     | '/katakana'
@@ -137,6 +148,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/analyze'
     | '/hiragana'
     | '/kanji'
     | '/katakana'
@@ -150,6 +162,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AnalyzeRoute: typeof AnalyzeRoute
   HiraganaRoute: typeof HiraganaRoute
   KanjiRoute: typeof KanjiRoute
   KatakanaRoute: typeof KatakanaRoute
@@ -181,6 +194,13 @@ declare module '@tanstack/react-router' {
       path: '/hiragana'
       fullPath: '/hiragana'
       preLoaderRoute: typeof HiraganaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analyze': {
+      id: '/analyze'
+      path: '/analyze'
+      fullPath: '/analyze'
+      preLoaderRoute: typeof AnalyzeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -238,6 +258,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AnalyzeRoute: AnalyzeRoute,
   HiraganaRoute: HiraganaRoute,
   KanjiRoute: KanjiRoute,
   KatakanaRoute: KatakanaRoute,

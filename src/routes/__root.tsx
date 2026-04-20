@@ -5,6 +5,7 @@ import {
   Scripts,
 } from '@tanstack/react-router';
 import Header from '@/components/Header';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { PROJECT_NAME } from '@/infra/lib/constants';
 import appCss from '../styles.css?url';
 
@@ -50,7 +51,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         cz-shortcut-listen='true'
       >
         <Header />
-        {children}
+        {/* <Navbar /> */}
+        <TooltipProvider>{children}</TooltipProvider>
         <Scripts />
       </body>
     </html>

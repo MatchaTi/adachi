@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { Languages, NotebookPen } from 'lucide-react';
+import { Languages, MessageSquareText, NotebookPen } from 'lucide-react';
 import Footer from '@/components/Footer';
 import Hero from '@/components/shared/hero';
 import { Button } from '@/components/ui/button';
@@ -26,6 +26,12 @@ const FEATURE_ITEMS = [
       'Learn to write Japanese characters with hanzi-writer and real-time stroke order feedback',
     icon: NotebookPen,
   },
+  {
+    title: 'Sentence Analysis',
+    description:
+      'Break down Japanese sentences into tokens, readings, script types, and parts of speech',
+    icon: MessageSquareText,
+  },
 ];
 
 function App() {
@@ -49,10 +55,13 @@ function App() {
           <Button asChild>
             <Link to='/kanji'>漢 Kanji</Link>
           </Button>
+          <Button asChild variant='outline'>
+            <Link to='/analyze'>解析 Analyze</Link>
+          </Button>
         </div>
       </Hero>
 
-      <section className='grid md:grid-cols-2'>
+      <section className='grid md:grid-cols-3'>
         {FEATURE_ITEMS.map((item) => (
           <Card
             key={item.title}
