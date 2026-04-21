@@ -1,19 +1,28 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { Search } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
+import { FlashcardPanel } from '@/components/shared/flashcard-panel';
 import Hero from '@/components/shared/hero';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Spinner } from '@/components/ui/spinner';
-import { client } from '@/orpc/client';
+import { client, orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/kanji')({
   component: RouteComponent,
@@ -25,6 +34,21 @@ function RouteComponent() {
   const normalizedQuery = search.trim().toLowerCase();
   const [query] = useDebounce(normalizedQuery, 300);
   const loadMoreRef = useRef<HTMLDivElement>(null);
+  const [isBackVisible, setIsBackVisible] = useState(false);
+  const [excludeCharacter, setExcludeCharacter] = useState<string>();
+  const [shuffleCount, setShuffleCount] = useState(0);
+  const [isFlashcardOpen, setIsFlashcardOpen] = useState(false);
+
+  const randomCardQuery = orpc.letter.getRandomKanji.queryOptions({
+    input: {
+      excludeCharacter,
+    },
+  });
+  const { data: activeCard, isFetching: isFetchingCard } = useQuery({
+    ...randomCardQuery,
+    queryKey: [...randomCardQuery.queryKey, shuffleCount],
+    enabled: isFlashcardOpen,
+  });
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteQuery({
@@ -79,16 +103,62 @@ function RouteComponent() {
   return (
     <main>
       <Hero badge='漢字' heading='Kanji' description={description}>
-        <div className='relative max-w-md'>
-          <Search className='pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground' />
-          <Input
-            type='search'
-            placeholder='Search kanji...'
-            className='pl-9'
-            aria-label='Search kanji'
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-          />
+        <div className='flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:items-center'>
+          <div className='relative flex-1'>
+            <Search className='pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground' />
+            <Input
+              type='search'
+              placeholder='Search kanji...'
+              className='pl-9'
+              aria-label='Search kanji'
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
+          </div>
+
+          <Dialog
+            open={isFlashcardOpen}
+            onOpenChange={(open) => {
+              setIsFlashcardOpen(open);
+
+              if (!open) {
+                setIsBackVisible(false);
+              }
+            }}
+          >
+            <DialogTrigger asChild>
+              <Button type='button'>Flashcard</Button>
+            </DialogTrigger>
+            <DialogContent
+              className='border-none bg-transparent p-0 shadow-none sm:max-w-[340px]'
+              showCloseButton={false}
+            >
+              <DialogHeader className='sr-only'>
+                <DialogTitle>Flashcard Kanji</DialogTitle>
+              </DialogHeader>
+
+              <FlashcardPanel
+                title='Learning the Kanji'
+                subtitle='Meaning and reading drill'
+                frontValue={activeCard?.character || '-'}
+                backValue={
+                  activeCard?.romaji ||
+                  activeCard?.meaning ||
+                  activeCard?.arti ||
+                  '-'
+                }
+                isBackVisible={isBackVisible}
+                onFlip={() => setIsBackVisible((prev) => !prev)}
+                onNext={() => {
+                  setIsBackVisible(false);
+                  setExcludeCharacter(activeCard?.character);
+                  setShuffleCount((prev) => prev + 1);
+                }}
+                isNextLoading={isFetchingCard}
+                disableActions={!activeCard}
+              />
+            </DialogContent>
+          </Dialog>
         </div>
       </Hero>
 
