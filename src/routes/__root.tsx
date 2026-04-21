@@ -46,13 +46,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body
-        className='bg-background text-foreground space-y-12 px-4 lg:px-80 lg:px-80 mt-10'
-        cz-shortcut-listen='true'
-      >
-        <Header />
-        {/* <Navbar /> */}
-        <TooltipProvider>{children}</TooltipProvider>
+      <body className='bg-background text-foreground' cz-shortcut-listen='true'>
+        <div className='mt-10 space-y-12 px-4 lg:px-80'>
+          <Header />
+          <TooltipProvider>{children}</TooltipProvider>
+        </div>
         <Scripts />
       </body>
     </html>
