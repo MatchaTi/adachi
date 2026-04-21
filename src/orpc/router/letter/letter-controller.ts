@@ -1,10 +1,17 @@
 import { ORPCError } from '@orpc/server';
 import { baseRouter } from '@/orpc/base';
-import { kanaCharacterSchema, kanjiPageQuerySchema } from './letter-schema';
+import {
+  kanaCharacterSchema,
+  kanjiPageQuerySchema,
+  randomKanaQuerySchema,
+} from './letter-schema';
 import {
   findHiragana,
   findKanji,
   findKatakana,
+  getRandomHiraganaCard,
+  getRandomKanjiCard,
+  getRandomKatakanaCard,
   listHiragana,
   listKanji,
   listKanjiPage,
@@ -29,6 +36,20 @@ export const getHiragana = baseRouter
     return letter;
   });
 
+export const getRandomHiragana = baseRouter
+  .input(randomKanaQuerySchema)
+  .handler(({ input }) => {
+    const card = getRandomHiraganaCard(input);
+
+    if (!card) {
+      throw new ORPCError('NOT_FOUND', {
+        message: 'No hiragana card found',
+      });
+    }
+
+    return card;
+  });
+
 export const getAllKatakana = baseRouter.handler(() => {
   return listKatakana();
 });
@@ -45,6 +66,20 @@ export const getKatakana = baseRouter
     }
 
     return letter;
+  });
+
+export const getRandomKatakana = baseRouter
+  .input(randomKanaQuerySchema)
+  .handler(({ input }) => {
+    const card = getRandomKatakanaCard(input);
+
+    if (!card) {
+      throw new ORPCError('NOT_FOUND', {
+        message: 'No katakana card found',
+      });
+    }
+
+    return card;
   });
 
 export const getAllKanji = baseRouter.handler(() => {
@@ -71,12 +106,29 @@ export const getKanji = baseRouter
     return letter;
   });
 
+export const getRandomKanji = baseRouter
+  .input(randomKanaQuerySchema)
+  .handler(({ input }) => {
+    const card = getRandomKanjiCard(input);
+
+    if (!card) {
+      throw new ORPCError('NOT_FOUND', {
+        message: 'No kanji card found',
+      });
+    }
+
+    return card;
+  });
+
 export const letterRouter = {
   getAllHiragana,
   getHiragana,
+  getRandomHiragana,
   getAllKatakana,
   getKatakana,
+  getRandomKatakana,
   getAllKanji,
   getKanjiPage,
   getKanji,
+  getRandomKanji,
 };

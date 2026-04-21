@@ -6,6 +6,12 @@ export const kanaCharacterSchema = z.object({
 
 export type KanaCharacterInput = z.infer<typeof kanaCharacterSchema>;
 
+export const randomKanaQuerySchema = z.object({
+  excludeCharacter: z.string().min(1).max(1).optional(),
+});
+
+export type RandomKanaQueryInput = z.infer<typeof randomKanaQuerySchema>;
+
 export const kanjiPageQuerySchema = z.object({
   cursor: z.number().int().min(0).default(0),
   limit: z.number().int().min(1).max(100).default(40),
