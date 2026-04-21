@@ -9,7 +9,16 @@ export default function Footer() {
       <div className='page-wrap flex flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left'>
         <div>
           <p className='m-0 text-sm'>
-            &copy; {year} MatchaTi. All rights reserved.
+            &copy; {year}{' '}
+            <a
+              href='https://github.com/MatchaTi'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='hover:underline'
+            >
+              MatchaTi.
+            </a>{' '}
+            All rights reserved.
           </p>
           <p className='island-kicker m-0'>
             Built with TanStack Start + oRPC + Shadcn + Hanzi Writer
