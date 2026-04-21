@@ -1,5 +1,10 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { Languages, MessageSquareText, NotebookPen } from 'lucide-react';
+import {
+  Languages,
+  Layers,
+  MessageSquareText,
+  NotebookPen,
+} from 'lucide-react';
 import Footer from '@/components/Footer';
 import Hero from '@/components/shared/hero';
 import { Button } from '@/components/ui/button';
@@ -27,6 +32,12 @@ const FEATURE_ITEMS = [
     icon: NotebookPen,
   },
   {
+    title: 'Flashcard Drills',
+    description:
+      'Flip random cards for Hiragana, Katakana, and Kanji to train reading recall quickly',
+    icon: Layers,
+  },
+  {
     title: 'Sentence Analysis',
     description:
       'Break down Japanese sentences into tokens, readings, script types, and parts of speech',
@@ -36,7 +47,7 @@ const FEATURE_ITEMS = [
 
 function App() {
   const description =
-    'Platform for learning how to write and read Japanese characters, including Hiragana, Katakana, and Kanji.';
+    'Learn Japanese scripts with searchable character grids, writing practice, flashcard drills, and sentence analysis.';
 
   return (
     <main className='space-y-24'>
@@ -61,14 +72,14 @@ function App() {
         </div>
       </Hero>
 
-      <section className='grid md:grid-cols-3'>
+      <section className='grid md:grid-cols-2'>
         {FEATURE_ITEMS.map((item) => (
           <Card
             key={item.title}
             className='shadow-none border-border rounded-none'
           >
             <CardHeader>
-              <div className='w-10 h-10 bg-muted flex items-center justify-center'>
+              <div className='bg-muted flex items-center justify-center p-4 w-fit rounded'>
                 <item.icon />
               </div>
               <CardTitle>{item.title}</CardTitle>
