@@ -155,7 +155,7 @@ function RouteComponent() {
         <Card className='rounded-none border-border bg-card/70 p-3 shadow-none'>
           <div className='relative grid h-[320px] place-items-center overflow-hidden border border-border/60 bg-background'>
             <div className='pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-[size:50%_100%,100%_50%] opacity-70' />
-            <p className='font-sans-jp text-[160px] leading-none'>
+            <p className='relative z-[1] font-sans-jp text-[160px] leading-none'>
               {kanji.character}
             </p>
           </div>
