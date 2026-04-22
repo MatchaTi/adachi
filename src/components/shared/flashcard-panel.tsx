@@ -1,4 +1,3 @@
-import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 type FlashcardPanelProps = {
@@ -25,48 +24,41 @@ export function FlashcardPanel({
   disableActions = false,
 }: FlashcardPanelProps) {
   const displayValue = isBackVisible ? backValue : frontValue;
-  const isLongValue = displayValue.length > 8;
+  const isLongValue = displayValue.length > 1;
 
   return (
-    <div className='bg-card mx-auto w-full max-w-[300px] rounded-[24px]'>
-      <div className='bg-foreground text-background rounded-t-[24px] px-6 pt-5 pb-16'>
-        <ArrowLeft className='mb-3 size-5 opacity-90' />
-        <h3 className='text-4xl leading-8 font-bold'>{title}</h3>
-        <p className='text-background/80 mt-1 text-sm'>{subtitle}</p>
+    <div className='bg-card border-border p-3 shadow-none rounded-xl'>
+      <div className='bg-background relative grid h-[320px] place-items-center overflow-hidden rounded-md border border-border/60'>
+        <div className='pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-[size:50%_100%,100%_50%] opacity-70' />
+        <p
+          className={
+            isLongValue
+              ? 'relative z-[1] text-foreground font-sans-jp text-4xl font-bold leading-tight'
+              : 'relative z-[1] text-foreground font-sans-jp text-[160px] font-bold leading-none'
+          }
+        >
+          {displayValue}
+        </p>
       </div>
 
-      <div className='px-6 pb-6'>
-        <div className='bg-background -mt-10 rounded-3xl border border-border px-6 py-7 text-center shadow-sm'>
-          <p
-            className={
-              isLongValue
-                ? 'text-foreground text-3xl leading-tight font-bold'
-                : 'text-foreground text-8xl leading-none font-bold'
-            }
-          >
-            {displayValue}
-          </p>
-        </div>
-
-        <div className='mt-6 grid grid-cols-2 gap-2'>
-          <Button
-            type='button'
-            variant='outline'
-            className='rounded-lg'
-            onClick={onNext}
-            disabled={disableActions || isNextLoading}
-          >
-            {isNextLoading ? 'Shuffling...' : 'Next'}
-          </Button>
-          <Button
-            type='button'
-            className='rounded-lg'
-            onClick={onFlip}
-            disabled={disableActions}
-          >
-            {isBackVisible ? 'Show Front' : 'Flip Card'}
-          </Button>
-        </div>
+      <div className='mt-4 grid grid-cols-2 gap-3'>
+        <Button
+          type='button'
+          variant='outline'
+          onClick={onNext}
+          disabled={disableActions || isNextLoading}
+          className='w-full'
+        >
+          {isNextLoading ? 'Shuffling...' : 'Next'}
+        </Button>
+        <Button
+          type='button'
+          onClick={onFlip}
+          disabled={disableActions}
+          className='w-full'
+        >
+          {isBackVisible ? 'Show Front' : 'Flip Card'}
+        </Button>
       </div>
     </div>
   );
