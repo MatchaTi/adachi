@@ -56,7 +56,7 @@ function App() {
         heading={PROJECT_NAME}
         description={description}
       >
-        <div className='space-x-4'>
+        <div className='flex items-center flex-wrap gap-2'>
           <Button asChild>
             <Link to='/hiragana'>あ Hiragana</Link>
           </Button>
