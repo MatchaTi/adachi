@@ -81,7 +81,9 @@ function RouteComponent() {
 
   return (
     <main>
-      <Hero badge='カタカナ' heading='Katakana' description={description}>
+      <Hero badge='カタカナ' heading='Katakana' description={description} />
+
+      <div className='sticky top-4 z-20 -mx-4 border-y border-border/70 bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/80'>
         <div className='flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:items-center'>
           <div className='relative flex-1'>
             <Search className='pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground' />
@@ -134,9 +136,9 @@ function RouteComponent() {
             </DialogContent>
           </Dialog>
         </div>
-      </Hero>
+      </div>
 
-      <section className='grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
+      <section className='mt-4 grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
         {filteredKatakana.map((char) => (
           <Link
             to='/katakana/$letter'
