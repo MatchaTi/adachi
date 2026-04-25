@@ -1,7 +1,9 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
+import type { ErrorComponentProps } from '@tanstack/react-router';
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { ArrowLeft, PencilLine, RotateCcw } from 'lucide-react';
+import { ArrowLeft, PencilLine, RotateCcw, TriangleAlert } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { Heading } from '@/components/shared/heading';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -16,8 +18,79 @@ export const Route = createFileRoute('/katakana_/$letter')({
       }),
     );
   },
-  errorComponent: () => <div>Error</div>,
+  errorComponent: ErrorComponent,
 });
+
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
+  const message =
+    error instanceof Error
+      ? error.message
+      : 'An unexpected problem occurred while loading this katakana detail.';
+
+  return (
+    <main className='mx-auto flex w-full max-w-7xl flex-col gap-6'>
+      <div className='flex items-center justify-between'>
+        <Button asChild variant='outline'>
+          <Link to='/katakana'>
+            <ArrowLeft />
+            Back
+          </Link>
+        </Button>
+        <p className='text-xs tracking-[0.2em] text-muted-foreground uppercase'>
+          Katakana Detail
+        </p>
+      </div>
+
+      <Card className='overflow-hidden rounded-none border-border bg-card/70 shadow-none'>
+        <div className='grid gap-0 lg:grid-cols-[220px_minmax(0,1fr)]'>
+          <div className='relative flex min-h-[220px] items-center justify-center border-b border-border/70 bg-background p-8 lg:border-b-0 lg:border-r'>
+            <div className='pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-[size:56px_56px] opacity-35' />
+            <div className='relative flex size-24 items-center justify-center rounded-full border border-border/70 bg-card text-destructive shadow-sm'>
+              <TriangleAlert className='size-10' />
+            </div>
+          </div>
+
+          <div className='space-y-6 p-6 sm:p-8'>
+            <div className='space-y-3'>
+              <p className='text-[11px] tracking-[0.24em] text-muted-foreground uppercase'>
+                Load Error
+              </p>
+              <Heading
+                level='h1'
+                className='text-3xl leading-tight sm:text-4xl'
+              >
+                We could not load this katakana detail.
+              </Heading>
+              <p className='max-w-2xl text-sm leading-7 text-muted-foreground'>
+                The character data or stroke canvas failed to initialize. Try
+                again, or return to the katakana index if the problem persists.
+              </p>
+            </div>
+
+            <div className='rounded-md border border-border/70 bg-background/80 p-4'>
+              <p className='text-xs tracking-[0.18em] text-muted-foreground uppercase'>
+                Details
+              </p>
+              <p className='mt-2 text-sm leading-6 text-foreground/90'>
+                {message}
+              </p>
+            </div>
+
+            <div className='flex flex-col gap-3 sm:flex-row'>
+              <Button onClick={reset} className='sm:flex-1'>
+                <RotateCcw />
+                Try again
+              </Button>
+              <Button asChild variant='outline' className='sm:flex-1'>
+                <Link to='/katakana'>Back to Katakana</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </main>
+  );
+}
 
 function RouteComponent() {
   const { letter } = Route.useParams();
@@ -138,7 +211,7 @@ function RouteComponent() {
     .toUpperCase()}`;
 
   return (
-    <main className='mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8'>
+    <main className='mx-auto flex w-full max-w-7xl flex-col gap-8'>
       <div className='flex items-center justify-between'>
         <Button asChild variant='outline'>
           <Link to='/katakana'>
