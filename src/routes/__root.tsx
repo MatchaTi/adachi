@@ -4,6 +4,7 @@ import {
   HeadContent,
   Scripts,
 } from '@tanstack/react-router';
+import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { PROJECT_NAME } from '@/infra/lib/constants';
@@ -50,6 +51,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <div className='mt-10 space-y-12 px-4 lg:px-80'>
           <Header />
           <TooltipProvider>{children}</TooltipProvider>
+          <Footer />
         </div>
         <Scripts />
       </body>
