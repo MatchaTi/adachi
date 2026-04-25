@@ -1,7 +1,9 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
+import type { ErrorComponentProps } from '@tanstack/react-router';
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { ArrowLeft, PencilLine, RotateCcw } from 'lucide-react';
+import { ArrowLeft, PencilLine, RotateCcw, TriangleAlert } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { Heading } from '@/components/shared/heading';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -16,13 +18,84 @@ export const Route = createFileRoute('/kanji_/$letter')({
     );
   },
   component: RouteComponent,
-  errorComponent: () => <div>Error</div>,
+  errorComponent: ErrorComponent,
 });
+
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
+  const message =
+    error instanceof Error
+      ? error.message
+      : 'An unexpected problem occurred while loading this kanji detail.';
+
+  return (
+    <main className='mx-auto flex w-full max-w-7xl flex-col gap-6'>
+      <div className='flex items-center justify-between'>
+        <Button asChild variant='outline'>
+          <Link to='/kanji'>
+            <ArrowLeft />
+            Back
+          </Link>
+        </Button>
+        <p className='text-xs tracking-[0.2em] text-muted-foreground uppercase'>
+          Kanji Detail
+        </p>
+      </div>
+
+      <Card className='overflow-hidden rounded-none border-border bg-card/70 shadow-none'>
+        <div className='grid gap-0 lg:grid-cols-[220px_minmax(0,1fr)]'>
+          <div className='relative flex min-h-[220px] items-center justify-center border-b border-border/70 bg-background p-8 lg:border-b-0 lg:border-r'>
+            <div className='pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-[size:56px_56px] opacity-35' />
+            <div className='relative flex size-24 items-center justify-center rounded-full border border-border/70 bg-card text-destructive shadow-sm'>
+              <TriangleAlert className='size-10' />
+            </div>
+          </div>
+
+          <div className='space-y-6 p-6 sm:p-8'>
+            <div className='space-y-3'>
+              <p className='text-[11px] tracking-[0.24em] text-muted-foreground uppercase'>
+                Load Error
+              </p>
+              <Heading
+                level='h1'
+                className='text-3xl leading-tight sm:text-4xl'
+              >
+                We could not load this kanji detail.
+              </Heading>
+              <p className='max-w-2xl text-sm leading-7 text-muted-foreground'>
+                The character data or stroke canvas failed to initialize. Try
+                again, or return to the kanji index if the problem persists.
+              </p>
+            </div>
+
+            <div className='rounded-md border border-border/70 bg-background/80 p-4'>
+              <p className='text-xs tracking-[0.18em] text-muted-foreground uppercase'>
+                Details
+              </p>
+              <p className='mt-2 text-sm leading-6 text-foreground/90'>
+                {message}
+              </p>
+            </div>
+
+            <div className='flex flex-col gap-3 sm:flex-row'>
+              <Button onClick={reset} className='sm:flex-1'>
+                <RotateCcw />
+                Try again
+              </Button>
+              <Button asChild variant='outline' className='sm:flex-1'>
+                <Link to='/kanji'>Back to Kanji</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </main>
+  );
+}
 
 function RouteComponent() {
   const { letter } = Route.useParams();
   const { data: kanji } = useSuspenseQuery(
-    orpc.letter.getKanji.queryOptions({
+    orpc.kanji.getKanjiDetails.queryOptions({
       input: { character: letter },
     }),
   );
@@ -38,6 +111,18 @@ function RouteComponent() {
     cancelQuiz: () => void;
   } | null>(null);
   const writerSize = 260;
+  const meaningList = Array.isArray(kanji.meanings) ? kanji.meanings : [];
+  const onReadingList = Array.isArray(kanji.on_readings)
+    ? kanji.on_readings
+    : [];
+  const kunReadingList = Array.isArray(kanji.kun_readings)
+    ? kanji.kun_readings
+    : [];
+  const nameReadingList = Array.isArray(kanji.name_readings)
+    ? kanji.name_readings
+    : [];
+  const primaryMeaning = meaningList[0] ?? '-';
+  const meaningText = meaningList.length > 0 ? meaningList.join(', ') : '-';
 
   useEffect(() => {
     let disposed = false;
@@ -60,17 +145,13 @@ function RouteComponent() {
 
         const writer = module.default.create(
           writerContainerRef.current,
-          kanji.character,
+          kanji.kanji,
           {
             width: writerSize,
             height: writerSize,
             padding: 20,
             strokeAnimationSpeed: 1,
             delayBetweenStrokes: 250,
-            charDataLoader: () => ({
-              strokes: kanji.strokes,
-              medians: kanji.medians,
-            }),
           },
         );
 
@@ -88,7 +169,7 @@ function RouteComponent() {
       writerRef.current?.cancelQuiz();
       writerRef.current = null;
     };
-  }, [kanji.character, kanji.medians, kanji.strokes]);
+  }, [kanji.kanji]);
 
   useEffect(() => {
     if (!isWriterReady || !writerRef.current) {
@@ -131,14 +212,8 @@ function RouteComponent() {
     });
   };
 
-  const strokeCount = kanji.strokes.length;
-  const unicodeCodepoint = `U+${kanji.character
-    .codePointAt(0)
-    ?.toString(16)
-    .toUpperCase()}`;
-
   return (
-    <main className='mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8'>
+    <main className='mx-auto flex w-full max-w-7xl flex-col gap-8'>
       <div className='flex items-center justify-between'>
         <Button asChild variant='outline'>
           <Link to='/kanji'>
@@ -156,15 +231,15 @@ function RouteComponent() {
           <div className='relative grid h-[320px] place-items-center overflow-hidden border border-border/60 bg-background'>
             <div className='pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-[size:50%_100%,100%_50%] opacity-70' />
             <p className='relative z-[1] font-sans-jp text-[160px] leading-none'>
-              {kanji.character}
+              {kanji.kanji}
             </p>
           </div>
           <div className='mt-3 grid grid-cols-2 gap-2 text-xs tracking-[0.14em] text-muted-foreground uppercase'>
             <span className='border border-border/70 px-2 py-1'>
-              {unicodeCodepoint}
+              {kanji.unicode}
             </span>
             <span className='border border-border/70 px-2 py-1 text-right'>
-              {strokeCount} strokes
+              {kanji.stroke_count} strokes
             </span>
           </div>
         </Card>
@@ -174,13 +249,16 @@ function RouteComponent() {
             Character
           </p>
           <h1 className='font-sans-jp text-5xl leading-tight sm:text-6xl'>
-            {kanji.character}
+            {kanji.kanji}
           </h1>
-          <p className='text-4xl leading-tight'>{kanji.romaji || '-'}</p>
+          <p className='text-3xl leading-tight text-muted-foreground'>
+            {primaryMeaning}
+          </p>
           <div className='h-px w-24 bg-border' />
           <p className='max-w-2xl text-base leading-7 text-foreground'>
-            {kanji.arti || '-'}
+            {meaningText}
           </p>
+
           <p className='max-w-2xl text-sm leading-7 text-muted-foreground'>
             Use learn mode to follow the animated stroke order, then switch to
             write mode to practice the character directly on the canvas.
@@ -240,6 +318,168 @@ function RouteComponent() {
               </Button>
             </TabsContent>
           </Tabs>
+        </Card>
+      </section>
+
+      <section className='space-y-5'>
+        <div className='border-b border-border/60 pb-3'>
+          <p className='text-[11px] tracking-[0.24em] text-muted-foreground uppercase'>
+            Study Deck
+          </p>
+          <h2 className='mt-1 text-3xl leading-none'>Reading Atlas</h2>
+        </div>
+
+        <div className='grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]'>
+          <Card className='rounded-none border-border bg-card/70 p-4 shadow-none'>
+            <div className='grid gap-4 md:grid-cols-3'>
+              <section className='space-y-3 border-l-2 border-foreground/90 pl-4'>
+                <p className='text-xs tracking-[0.16em] text-muted-foreground uppercase'>
+                  Onyomi
+                </p>
+                <div className='flex flex-wrap gap-2'>
+                  {(onReadingList.length > 0 ? onReadingList : ['-']).map(
+                    (item) => (
+                      <span
+                        key={`on-${item}`}
+                        className='border border-border/70 bg-foreground px-3 py-1 text-sm text-background'
+                      >
+                        {item}
+                      </span>
+                    ),
+                  )}
+                </div>
+              </section>
+
+              <section className='space-y-3 border-l-2 border-border/80 pl-4'>
+                <p className='text-xs tracking-[0.16em] text-muted-foreground uppercase'>
+                  Kunyomi
+                </p>
+                <div className='flex flex-wrap gap-2'>
+                  {(kunReadingList.length > 0 ? kunReadingList : ['-']).map(
+                    (item) => (
+                      <span
+                        key={`kun-${item}`}
+                        className='border border-border/70 bg-background px-3 py-1 text-sm'
+                      >
+                        {item}
+                      </span>
+                    ),
+                  )}
+                </div>
+              </section>
+
+              <section className='space-y-3 border-l-2 border-border/80 pl-4'>
+                <p className='text-xs tracking-[0.16em] text-muted-foreground uppercase'>
+                  Nanori
+                </p>
+                <div className='flex flex-wrap gap-2'>
+                  {(nameReadingList.length > 0 ? nameReadingList : ['-']).map(
+                    (item) => (
+                      <span
+                        key={`name-${item}`}
+                        className='border border-border/70 bg-background px-3 py-1 text-sm'
+                      >
+                        {item}
+                      </span>
+                    ),
+                  )}
+                </div>
+              </section>
+            </div>
+          </Card>
+
+          <Card className='rounded-none border-border bg-card/70 p-4 shadow-none'>
+            <p className='text-xs tracking-[0.2em] text-muted-foreground uppercase'>
+              Quick Facts
+            </p>
+            <div className='mt-4 space-y-3'>
+              <div className='flex items-center justify-between border-b border-border/60 pb-2'>
+                <span className='text-sm text-muted-foreground'>Joyo</span>
+                <span className='text-sm font-medium'>
+                  Grade {kanji.grade ?? '-'}
+                </span>
+              </div>
+              <div className='flex items-center justify-between border-b border-border/60 pb-2'>
+                <span className='text-sm text-muted-foreground'>JLPT</span>
+                <span className='text-sm font-medium'>
+                  N{kanji.jlpt ?? '-'}
+                </span>
+              </div>
+              <div className='flex items-center justify-between border-b border-border/60 pb-2'>
+                <span className='text-sm text-muted-foreground'>Frequency</span>
+                <span className='text-sm font-medium'>
+                  #{kanji.freq_mainichi_shinbun ?? '-'}
+                </span>
+              </div>
+              <div className='flex items-center justify-between border-b border-border/60 pb-2'>
+                <span className='text-sm text-muted-foreground'>Strokes</span>
+                <span className='text-sm font-medium'>
+                  {kanji.stroke_count ?? '-'}
+                </span>
+              </div>
+              <div className='flex items-center justify-between'>
+                <span className='text-sm text-muted-foreground'>Unicode</span>
+                <span className='text-sm font-medium'>
+                  {kanji.unicode ?? '-'}
+                </span>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <Card className='rounded-none border-border bg-card/70 p-4 shadow-none'>
+          <p className='text-xs tracking-[0.2em] uppercase'>Reading Notes</p>
+          <div className='mt-3 grid gap-3 md:grid-cols-3'>
+            <div className='border border-border/70 bg-background p-3'>
+              <Heading level='h6' className='text-sm font-semibold'>
+                Onyomi (音読み)
+              </Heading>
+              <p className='mt-2 text-sm leading-6 text-muted-foreground'>
+                Sino-Japanese reading derived from historical Chinese
+                pronunciation, often used in kanji compounds (jukugo).
+              </p>
+            </div>
+
+            <div className='border border-border/70 bg-background p-3'>
+              <Heading level='h6' className='text-sm font-semibold'>
+                Kunyomi (訓読み)
+              </Heading>
+              <p className='mt-2 text-sm leading-6 text-muted-foreground'>
+                Native Japanese reading, commonly used when a kanji stands alone
+                or appears with okurigana.
+              </p>
+            </div>
+
+            <div className='border border-border/70 bg-background p-3'>
+              <Heading level='h6' className='text-sm font-semibold'>
+                Nanori (名乗り)
+              </Heading>
+              <p className='mt-2 text-sm leading-6 text-muted-foreground'>
+                Special name reading used in personal or place names. Not every
+                kanji has a nanori reading.
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        <Card className='rounded-none border-border bg-card/70 p-4 shadow-none'>
+          <p className='text-xs tracking-[0.2em] text-muted-foreground uppercase'>
+            Practice Guide
+          </p>
+          <div className='mt-3 grid gap-3 md:grid-cols-3'>
+            <div className='border border-border/70 bg-background p-3'>
+              <p className='text-xs text-muted-foreground'>Step 1</p>
+              <p className='mt-1 text-sm font-medium'>Watch stroke animation</p>
+            </div>
+            <div className='border border-border/70 bg-background p-3'>
+              <p className='text-xs text-muted-foreground'>Step 2</p>
+              <p className='mt-1 text-sm font-medium'>Switch to write mode</p>
+            </div>
+            <div className='border border-border/70 bg-background p-3'>
+              <p className='text-xs text-muted-foreground'>Step 3</p>
+              <p className='mt-1 text-sm font-medium'>Repeat until confident</p>
+            </div>
+          </div>
         </Card>
       </section>
     </main>
