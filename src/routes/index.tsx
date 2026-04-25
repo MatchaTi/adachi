@@ -5,7 +5,6 @@ import {
   MessageSquareText,
   NotebookPen,
 } from 'lucide-react';
-import Footer from '@/components/Footer';
 import Hero from '@/components/shared/hero';
 import { Button } from '@/components/ui/button';
 import {
@@ -96,8 +95,6 @@ function App() {
           className='mx-auto dark:invert'
         />
       </section>
-
-      <Footer />
     </main>
   );
 }

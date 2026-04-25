@@ -6,12 +6,7 @@ import { useDebounce } from 'use-debounce';
 import { FlashcardPanel } from '@/components/shared/flashcard-panel';
 import Hero from '@/components/shared/hero';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -31,31 +26,42 @@ export const Route = createFileRoute('/kanji')({
 
 function RouteComponent() {
   const [search, setSearch] = useState('');
-  const normalizedQuery = search.trim().toLowerCase();
+  const normalizedQuery = search.trim();
   const [query] = useDebounce(normalizedQuery, 300);
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const [isBackVisible, setIsBackVisible] = useState(false);
-  const [excludeCharacter, setExcludeCharacter] = useState<string>();
   const [shuffleCount, setShuffleCount] = useState(0);
   const [isFlashcardOpen, setIsFlashcardOpen] = useState(false);
 
-  const randomCardQuery = orpc.letter.getRandomKanji.queryOptions({
-    input: {
-      excludeCharacter,
-    },
-  });
+  const randomCardQuery = orpc.kanji.getRandomKanji.queryOptions();
   const { data: activeCard, isFetching: isFetchingCard } = useQuery({
     ...randomCardQuery,
     queryKey: [...randomCardQuery.queryKey, shuffleCount],
     enabled: isFlashcardOpen,
   });
 
+  const activeCardTitle = activeCard?.kanji ?? '-';
+  const activeCardMeaning = activeCard?.meanings?.[0] ?? '-';
+  const activeCardReadings = {
+    on: activeCard?.on_readings?.[0] ?? '-',
+    kun: activeCard?.kun_readings?.[0] ?? '-',
+  };
+  const activeCardFacts = [
+    { label: 'Grade', value: activeCard?.grade ?? '-' },
+    { label: 'JLPT', value: activeCard?.jlpt ? `N${activeCard.jlpt}` : '-' },
+    {
+      label: 'Freq',
+      value: activeCard?.freq_mainichi_shinbun ?? '-',
+    },
+    { label: 'Strokes', value: activeCard?.stroke_count ?? '-' },
+  ];
+
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ['kanji', 'infinite', query],
       initialPageParam: 0,
       queryFn: ({ pageParam }) =>
-        client.letter.getKanjiPage({
+        client.kanji.getKanjiPage({
           cursor: pageParam,
           limit: 40,
           search: query,
@@ -108,7 +114,7 @@ function RouteComponent() {
             <Search className='pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground' />
             <Input
               type='search'
-              placeholder='Search kanji...'
+              placeholder='Search kanji, meaning, or reading...'
               className='pl-9'
               aria-label='Search kanji'
               value={search}
@@ -140,18 +146,67 @@ function RouteComponent() {
               <FlashcardPanel
                 title='Learning the Kanji'
                 subtitle='Meaning and reading drill'
-                frontValue={activeCard?.character || '-'}
+                frontValue={activeCardTitle}
                 backValue={
-                  activeCard?.romaji ||
-                  activeCard?.meaning ||
-                  activeCard?.arti ||
-                  '-'
+                  [
+                    activeCardMeaning,
+                    activeCardReadings.on,
+                    activeCardReadings.kun,
+                  ]
+                    .filter(Boolean)
+                    .join(' • ') || '-'
+                }
+                backContent={
+                  <div className='flex h-full flex-col gap-3'>
+                    <div className='flex items-start justify-between gap-3'>
+                      <div>
+                        <p className='text-[10px] tracking-[0.22em] text-muted-foreground uppercase'>
+                          Kanji Detail
+                        </p>
+                        <p className='mt-1 font-sans-jp text-[72px] leading-none'>
+                          {activeCardTitle}
+                        </p>
+                      </div>
+                      <div className='rounded-full border border-border/70 bg-background px-2.5 py-1 text-[10px] tracking-[0.2em] text-muted-foreground uppercase'>
+                        {activeCard?.unicode ?? '----'}
+                      </div>
+                    </div>
+
+                    <div className='space-y-2 border-y border-border/70 py-2'>
+                      <p className='text-sm font-medium leading-tight text-foreground'>
+                        {activeCardMeaning}
+                      </p>
+                      <div className='flex flex-wrap gap-2 text-xs'>
+                        <span className='border border-border/70 bg-foreground px-2 py-1 text-background'>
+                          ON {activeCardReadings.on}
+                        </span>
+                        <span className='border border-border/70 bg-background px-2 py-1'>
+                          KUN {activeCardReadings.kun}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className='grid grid-cols-2 gap-2'>
+                      {activeCardFacts.map((fact) => (
+                        <div
+                          key={fact.label}
+                          className='border border-border/70 bg-background px-2 py-2'
+                        >
+                          <p className='text-[10px] tracking-[0.2em] text-muted-foreground uppercase'>
+                            {fact.label}
+                          </p>
+                          <p className='mt-1 text-sm font-medium'>
+                            {fact.value}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 }
                 isBackVisible={isBackVisible}
                 onFlip={() => setIsBackVisible((prev) => !prev)}
                 onNext={() => {
                   setIsBackVisible(false);
-                  setExcludeCharacter(activeCard?.character);
                   setShuffleCount((prev) => prev + 1);
                 }}
                 isNextLoading={isFetchingCard}
@@ -164,21 +219,10 @@ function RouteComponent() {
 
       <section className='grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
         {kanjiList.map((char) => (
-          <Link
-            to='/kanji/$letter'
-            params={{ letter: char.character }}
-            key={char.character}
-          >
+          <Link to='/kanji/$letter' params={{ letter: char }} key={char}>
             <Card className='rounded-none border-border shadow-none sm:aspect-square'>
               <CardHeader>
-                <CardTitle className='text-[5vh]'>{char.character}</CardTitle>
-                <CardDescription>{char.romaji || '-'}</CardDescription>
-                <p className='line-clamp-2 text-xs text-muted-foreground'>
-                  {char.arti || '-'}
-                </p>
-                <p className='text-xs text-muted-foreground'>
-                  {char.strokes.length} strokes
-                </p>
+                <CardTitle className='text-[5vh]'>{char}</CardTitle>
               </CardHeader>
             </Card>
           </Link>

@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 
 type FlashcardPanelProps = {
@@ -10,6 +11,7 @@ type FlashcardPanelProps = {
   onNext: () => void;
   isNextLoading: boolean;
   disableActions?: boolean;
+  backContent?: ReactNode;
 };
 
 export function FlashcardPanel({
@@ -22,23 +24,42 @@ export function FlashcardPanel({
   onNext,
   isNextLoading,
   disableActions = false,
+  backContent,
 }: FlashcardPanelProps) {
   const displayValue = isBackVisible ? backValue : frontValue;
   const isLongValue = displayValue.length > 1;
 
   return (
     <div className='bg-card border-border p-3 shadow-none rounded-xl'>
+      <div className='mb-3 flex items-start justify-between gap-3 px-1'>
+        <div className='space-y-1'>
+          <p className='text-[10px] tracking-[0.24em] text-muted-foreground uppercase'>
+            {title}
+          </p>
+          <p className='text-sm text-muted-foreground'>{subtitle}</p>
+        </div>
+        <span className='border border-border/70 bg-background px-2 py-1 text-[10px] tracking-[0.2em] text-muted-foreground uppercase'>
+          Kanji
+        </span>
+      </div>
+
       <div className='bg-background relative grid h-[320px] place-items-center overflow-hidden rounded-md border border-border/60'>
         <div className='pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-[size:50%_100%,100%_50%] opacity-70' />
-        <p
-          className={
-            isLongValue
-              ? 'relative z-[1] text-foreground font-sans-jp text-4xl font-bold leading-tight'
-              : 'relative z-[1] text-foreground font-sans-jp text-[160px] font-bold leading-none'
-          }
-        >
-          {displayValue}
-        </p>
+        {isBackVisible && backContent ? (
+          <div className='relative z-[1] flex h-full w-full flex-col justify-between p-4 text-foreground'>
+            {backContent}
+          </div>
+        ) : (
+          <p
+            className={
+              isLongValue
+                ? 'relative z-[1] text-foreground font-sans-jp text-4xl font-bold leading-tight'
+                : 'relative z-[1] text-foreground font-sans-jp text-[160px] font-bold leading-none'
+            }
+          >
+            {displayValue}
+          </p>
+        )}
       </div>
 
       <div className='mt-4 grid grid-cols-2 gap-3'>

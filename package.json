@@ -51,6 +51,7 @@
     "hanzi-writer": "^3.7.3",
     "husky": "^9.1.7",
     "input-otp": "^1.4.2",
+    "kanji-data": "^1.1.0",
     "lucide-react": "^1.8.0",
     "next-themes": "^0.4.6",
     "radix-ui": "^1.4.3",
