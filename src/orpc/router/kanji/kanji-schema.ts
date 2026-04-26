@@ -29,6 +29,11 @@ export const getKanjiDetailsSchema = z.object({
   character: z.string().min(1).max(1),
 });
 
+export const getKotowazaByKanjiSchema = z.object({
+  character: z.string().min(1).max(1),
+});
+
 export type Kanji = z.infer<typeof kanjiSchema>;
 export type GetKanjiPageInput = z.infer<typeof getKanjiPageSchema>;
 export type GetKanjiDetailsInput = z.infer<typeof getKanjiDetailsSchema>;
+export type GetKotowazaByKanjiInput = z.infer<typeof getKotowazaByKanjiSchema>;
