@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import { HandCoins } from 'lucide-react';
 import { Button } from './ui/button';
 
@@ -19,6 +20,10 @@ export default function Footer() {
               MatchaTi.
             </a>{' '}
             All rights reserved.
+            <span className='mx-2 text-muted-foreground'>•</span>
+            <Link to='/disclaimer' className='hover:underline'>
+              Disclaimer
+            </Link>
           </p>
           <p className='island-kicker m-0'>
             Built with TanStack Start + oRPC + Shadcn + Hanzi Writer

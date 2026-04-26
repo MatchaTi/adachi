@@ -15,6 +15,7 @@ import { Route as KanjiRouteImport } from './routes/kanji'
 import { Route as JoyoRouteImport } from './routes/joyo'
 import { Route as JlptRouteImport } from './routes/jlpt'
 import { Route as HiraganaRouteImport } from './routes/hiragana'
+import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as AnalyzeRouteImport } from './routes/analyze'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -54,6 +55,11 @@ const JlptRoute = JlptRouteImport.update({
 const HiraganaRoute = HiraganaRouteImport.update({
   id: '/hiragana',
   path: '/hiragana',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DisclaimerRoute = DisclaimerRouteImport.update({
+  id: '/disclaimer',
+  path: '/disclaimer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnalyzeRoute = AnalyzeRouteImport.update({
@@ -111,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/analyze': typeof AnalyzeRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/hiragana': typeof HiraganaRoute
   '/jlpt': typeof JlptRoute
   '/joyo': typeof JoyoRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/analyze': typeof AnalyzeRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/hiragana': typeof HiraganaRoute
   '/jlpt': typeof JlptRoute
   '/joyo': typeof JoyoRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/analyze': typeof AnalyzeRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/hiragana': typeof HiraganaRoute
   '/jlpt': typeof JlptRoute
   '/joyo': typeof JoyoRoute
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/analyze'
+    | '/disclaimer'
     | '/hiragana'
     | '/jlpt'
     | '/joyo'
@@ -186,6 +196,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/analyze'
+    | '/disclaimer'
     | '/hiragana'
     | '/jlpt'
     | '/joyo'
@@ -204,6 +215,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/analyze'
+    | '/disclaimer'
     | '/hiragana'
     | '/jlpt'
     | '/joyo'
@@ -223,6 +235,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AnalyzeRoute: typeof AnalyzeRoute
+  DisclaimerRoute: typeof DisclaimerRoute
   HiraganaRoute: typeof HiraganaRoute
   JlptRoute: typeof JlptRoute
   JoyoRoute: typeof JoyoRoute
@@ -280,6 +293,13 @@ declare module '@tanstack/react-router' {
       path: '/hiragana'
       fullPath: '/hiragana'
       preLoaderRoute: typeof HiraganaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/disclaimer': {
+      id: '/disclaimer'
+      path: '/disclaimer'
+      fullPath: '/disclaimer'
+      preLoaderRoute: typeof DisclaimerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/analyze': {
@@ -359,6 +379,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AnalyzeRoute: AnalyzeRoute,
+  DisclaimerRoute: DisclaimerRoute,
   HiraganaRoute: HiraganaRoute,
   JlptRoute: JlptRoute,
   JoyoRoute: JoyoRoute,
