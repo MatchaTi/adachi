@@ -22,6 +22,7 @@ const NAV_ITEMS = [
   { to: '/katakana', label: 'Katakana', char: 'カタカナ' },
   { to: '/kanji', label: 'Kanji', char: '漢字' },
   { to: '/analyze', label: 'Analyze', char: '解析' },
+  { to: '/kotowaza', label: 'Kotowaza', char: 'ことわざ' },
 ];
 
 export function NavDrawer() {
