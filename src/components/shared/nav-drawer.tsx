@@ -1,8 +1,20 @@
 import { Link } from '@tanstack/react-router';
-import { Menu, Star, X } from 'lucide-react';
+import {
+  ChevronRightIcon,
+  FileIcon,
+  FolderIcon,
+  Menu,
+  Star,
+  X,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ThemeToggle from '../ThemeToggle';
 import { Button } from '../ui/button';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '../ui/collapsible';
 import {
   Drawer,
   DrawerClose,
@@ -16,14 +28,151 @@ import {
 import { Separator } from '../ui/separator';
 import { Heading } from './heading';
 
-const NAV_ITEMS = [
-  { to: '/', label: 'Home', char: 'ホーム' },
-  { to: '/hiragana', label: 'Hiragana', char: 'ひらがな' },
-  { to: '/katakana', label: 'Katakana', char: 'カタカナ' },
-  { to: '/kanji', label: 'Kanji', char: '漢字' },
-  { to: '/analyze', label: 'Analyze', char: '解析' },
-  { to: '/kotowaza', label: 'Kotowaza', char: 'ことわざ' },
+type NavLeafItem = {
+  name: string;
+  subtitle?: string;
+  to:
+    | '/'
+    | '/hiragana'
+    | '/katakana'
+    | '/kanji'
+    | '/analyze'
+    | '/kotowaza'
+    | '/jlpt'
+    | '/jlpt/$n';
+  params?: {
+    n: string;
+  };
+};
+
+type NavBranchItem = {
+  name: string;
+  items: NavTreeItem[];
+};
+
+type NavTreeItem = NavLeafItem | NavBranchItem;
+
+const NAV_TREE: NavTreeItem[] = [
+  { name: 'home', subtitle: 'ホーム', to: '/' },
+  { name: 'hiragana', subtitle: 'ひらがな', to: '/hiragana' },
+  { name: 'katakana', subtitle: 'カタカナ', to: '/katakana' },
+  { name: 'kanji', subtitle: '漢字', to: '/kanji' },
+  { name: 'analyze', subtitle: '解析', to: '/analyze' },
+  { name: 'kotowaza', subtitle: 'ことわざ', to: '/kotowaza' },
+  { name: 'jlpt', subtitle: '日本語能力試験', to: '/jlpt' },
+  {
+    name: 'jlpt-levels',
+    items: [
+      {
+        name: 'jlpt-n5',
+        subtitle: 'beginner',
+        to: '/jlpt/$n',
+        params: { n: '5' },
+      },
+      {
+        name: 'jlpt-n4',
+        subtitle: 'elementary',
+        to: '/jlpt/$n',
+        params: { n: '4' },
+      },
+      {
+        name: 'jlpt-n3',
+        subtitle: 'intermediate',
+        to: '/jlpt/$n',
+        params: { n: '3' },
+      },
+      {
+        name: 'jlpt-n2',
+        subtitle: 'advanced',
+        to: '/jlpt/$n',
+        params: { n: '2' },
+      },
+      {
+        name: 'jlpt-n1',
+        subtitle: 'expert',
+        to: '/jlpt/$n',
+        params: { n: '1' },
+      },
+    ],
+  },
 ];
+
+function renderNavItem(item: NavTreeItem) {
+  if ('items' in item) {
+    return (
+      <Collapsible key={item.name}>
+        <CollapsibleTrigger asChild>
+          <Button
+            variant='ghost'
+            size='sm'
+            className='group w-full justify-start transition-none hover:bg-accent hover:text-accent-foreground'
+          >
+            <ChevronRightIcon className='transition-transform group-data-[state=open]:rotate-90' />
+            <FolderIcon />
+            {item.name}
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className='mt-1 ml-5 style-lyra:ml-4'>
+          <div className='flex flex-col gap-1'>
+            {item.items.map((child) => renderNavItem(child))}
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+    );
+  }
+
+  if (item.to === '/jlpt/$n') {
+    return (
+      <Link key={item.name} to={item.to} params={{ n: item.params?.n ?? '5' }}>
+        {({ isActive }) => (
+          <DrawerClose asChild>
+            <Button
+              variant='link'
+              size='sm'
+              className={cn(
+                'w-full justify-start gap-2 text-foreground',
+                isActive ? 'opacity-100' : 'opacity-60 hover:opacity-100',
+              )}
+            >
+              <FileIcon />
+              <span>{item.name}</span>
+              {item.subtitle ? (
+                <span className='text-xs text-muted-foreground'>
+                  {item.subtitle}
+                </span>
+              ) : null}
+            </Button>
+          </DrawerClose>
+        )}
+      </Link>
+    );
+  }
+
+  return (
+    <Link key={item.name} to={item.to}>
+      {({ isActive }) => (
+        <DrawerClose asChild>
+          <Button
+            variant='link'
+            size='sm'
+            className={cn(
+              'w-full justify-start gap-2 text-foreground',
+              isActive ? 'opacity-100' : 'opacity-60 hover:opacity-100',
+            )}
+          >
+            <FileIcon />
+            <span>{item.name}</span>
+            {item.subtitle ? (
+              <span className='text-xs text-muted-foreground'>
+                {item.subtitle}
+              </span>
+            ) : null}
+          </Button>
+        </DrawerClose>
+      )}
+    </Link>
+  );
+}
 
 export function NavDrawer() {
   return (
@@ -59,29 +208,16 @@ export function NavDrawer() {
             </Button>
           </DrawerClose>
         </DrawerHeader>
-        <ul className='px-4 grid gap-4'>
+        <div className='px-4 grid gap-4'>
           <DrawerDescription>
             Menu for navigating between different pages. Click on an item to go
             to the corresponding page.
           </DrawerDescription>
           <Separator />
-          {NAV_ITEMS.map((item) => (
-            <Link key={item.to} to={item.to}>
-              {({ isActive }) => (
-                <DrawerClose asChild>
-                  <div
-                    className={cn(
-                      isActive ? 'opacity-100' : 'opacity-50 hover:opacity-100',
-                    )}
-                  >
-                    <Heading level='h6'>{item.label}</Heading>
-                    <p>{item.char}</p>
-                  </div>
-                </DrawerClose>
-              )}
-            </Link>
-          ))}
-        </ul>
+          <div className='flex flex-col gap-1'>
+            {NAV_TREE.map((item) => renderNavItem(item))}
+          </div>
+        </div>
         <DrawerFooter>
           {/* TODO: add tip page for users to support the project */}
           <ThemeToggle />
