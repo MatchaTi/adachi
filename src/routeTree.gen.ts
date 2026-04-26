@@ -18,6 +18,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as KatakanaLetterRouteImport } from './routes/katakana_.$letter'
 import { Route as KanjiLetterRouteImport } from './routes/kanji_.$letter'
+import { Route as JlptNRouteImport } from './routes/jlpt.$n'
 import { Route as HiraganaLetterRouteImport } from './routes/hiragana_.$letter'
 import { Route as ApiSplatRouteImport } from './routes/api.$'
 import { Route as ApiRpcSplatRouteImport } from './routes/api.rpc.$'
@@ -67,6 +68,11 @@ const KanjiLetterRoute = KanjiLetterRouteImport.update({
   path: '/kanji/$letter',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JlptNRoute = JlptNRouteImport.update({
+  id: '/jlpt/$n',
+  path: '/jlpt/$n',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HiraganaLetterRoute = HiraganaLetterRouteImport.update({
   id: '/hiragana_/$letter',
   path: '/hiragana/$letter',
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/kotowaza': typeof KotowazaRoute
   '/api/$': typeof ApiSplatRoute
   '/hiragana/$letter': typeof HiraganaLetterRoute
+  '/jlpt/$n': typeof JlptNRoute
   '/kanji/$letter': typeof KanjiLetterRoute
   '/katakana/$letter': typeof KatakanaLetterRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -107,6 +114,7 @@ export interface FileRoutesByTo {
   '/kotowaza': typeof KotowazaRoute
   '/api/$': typeof ApiSplatRoute
   '/hiragana/$letter': typeof HiraganaLetterRoute
+  '/jlpt/$n': typeof JlptNRoute
   '/kanji/$letter': typeof KanjiLetterRoute
   '/katakana/$letter': typeof KatakanaLetterRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -122,6 +130,7 @@ export interface FileRoutesById {
   '/kotowaza': typeof KotowazaRoute
   '/api/$': typeof ApiSplatRoute
   '/hiragana_/$letter': typeof HiraganaLetterRoute
+  '/jlpt/$n': typeof JlptNRoute
   '/kanji_/$letter': typeof KanjiLetterRoute
   '/katakana_/$letter': typeof KatakanaLetterRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -138,6 +147,7 @@ export interface FileRouteTypes {
     | '/kotowaza'
     | '/api/$'
     | '/hiragana/$letter'
+    | '/jlpt/$n'
     | '/kanji/$letter'
     | '/katakana/$letter'
     | '/api/rpc/$'
@@ -152,6 +162,7 @@ export interface FileRouteTypes {
     | '/kotowaza'
     | '/api/$'
     | '/hiragana/$letter'
+    | '/jlpt/$n'
     | '/kanji/$letter'
     | '/katakana/$letter'
     | '/api/rpc/$'
@@ -166,6 +177,7 @@ export interface FileRouteTypes {
     | '/kotowaza'
     | '/api/$'
     | '/hiragana_/$letter'
+    | '/jlpt/$n'
     | '/kanji_/$letter'
     | '/katakana_/$letter'
     | '/api/rpc/$'
@@ -181,6 +193,7 @@ export interface RootRouteChildren {
   KotowazaRoute: typeof KotowazaRoute
   ApiSplatRoute: typeof ApiSplatRoute
   HiraganaLetterRoute: typeof HiraganaLetterRoute
+  JlptNRoute: typeof JlptNRoute
   KanjiLetterRoute: typeof KanjiLetterRoute
   KatakanaLetterRoute: typeof KatakanaLetterRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
@@ -251,6 +264,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KanjiLetterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/jlpt/$n': {
+      id: '/jlpt/$n'
+      path: '/jlpt/$n'
+      fullPath: '/jlpt/$n'
+      preLoaderRoute: typeof JlptNRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hiragana_/$letter': {
       id: '/hiragana_/$letter'
       path: '/hiragana/$letter'
@@ -285,6 +305,7 @@ const rootRouteChildren: RootRouteChildren = {
   KotowazaRoute: KotowazaRoute,
   ApiSplatRoute: ApiSplatRoute,
   HiraganaLetterRoute: HiraganaLetterRoute,
+  JlptNRoute: JlptNRoute,
   KanjiLetterRoute: KanjiLetterRoute,
   KatakanaLetterRoute: KatakanaLetterRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,

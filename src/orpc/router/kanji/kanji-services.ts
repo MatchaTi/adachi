@@ -1,6 +1,7 @@
 import kanji from 'kanji-data';
 import kotowaza from 'kotowaza';
 import type {
+  GetKanjiByJlptLevelInput,
   GetKanjiDetailsInput,
   GetKanjiPageInput,
   GetKotowazaByKanjiInput,
@@ -85,6 +86,16 @@ const getRandomKotowaza = () => {
   return randomKotowaza;
 };
 
+const getKanjiByJlptLevel = (input: GetKanjiByJlptLevelInput) => {
+  const kanjiList = kanji.getJlpt(input.level);
+
+  if (kanjiList.length === 0) {
+    return [];
+  }
+
+  return kanjiList;
+};
+
 export const kanjiService = {
   getAllKanji,
   getKanjiPage,
@@ -92,4 +103,5 @@ export const kanjiService = {
   getRandomKanji,
   getKotowazaByKanji,
   getRandomKotowaza,
+  getKanjiByJlptLevel,
 };

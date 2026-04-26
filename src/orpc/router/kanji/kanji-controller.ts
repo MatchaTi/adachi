@@ -1,6 +1,7 @@
 import { ORPCError } from '@orpc/client';
 import { baseRouter } from '@/orpc/base';
 import {
+  getKanjiByJlptLevelSchema,
   getKanjiDetailsSchema,
   getKanjiPageSchema,
   getKotowazaByKanjiSchema,
@@ -70,6 +71,20 @@ const getRandomKotowaza = baseRouter.handler(() => {
   return randommKotowaza;
 });
 
+const getKanjiByJlptLevel = baseRouter
+  .input(getKanjiByJlptLevelSchema)
+  .handler(({ input }) => {
+    const kanjiList = kanjiService.getKanjiByJlptLevel(input);
+
+    if (kanjiList.length === 0) {
+      throw new ORPCError('NOT_FOUND', {
+        message: `No kanji found for JLPT level: ${input.level}`,
+      });
+    }
+
+    return kanjiList;
+  });
+
 export const kanjiRouter = {
   getAllKanji,
   getKanjiPage,
@@ -77,4 +92,5 @@ export const kanjiRouter = {
   getRandomKanji,
   getKotowazaByKanji,
   getRandomKotowaza,
+  getKanjiByJlptLevel,
 };
