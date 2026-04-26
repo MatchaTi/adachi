@@ -37,10 +37,17 @@ export const getKanjiByJlptLevelSchema = z.object({
   level: z.number().min(1).max(5),
 });
 
+export const getKanjiByJoyoLevelSchema = z.object({
+  level: z.number().min(1).max(6),
+});
+
 export type Kanji = z.infer<typeof kanjiSchema>;
 export type GetKanjiPageInput = z.infer<typeof getKanjiPageSchema>;
 export type GetKanjiDetailsInput = z.infer<typeof getKanjiDetailsSchema>;
 export type GetKotowazaByKanjiInput = z.infer<typeof getKotowazaByKanjiSchema>;
 export type GetKanjiByJlptLevelInput = z.infer<
   typeof getKanjiByJlptLevelSchema
+>;
+export type GetKanjiByJoyoLevelInput = z.infer<
+  typeof getKanjiByJoyoLevelSchema
 >;

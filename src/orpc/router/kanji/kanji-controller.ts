@@ -2,6 +2,7 @@ import { ORPCError } from '@orpc/client';
 import { baseRouter } from '@/orpc/base';
 import {
   getKanjiByJlptLevelSchema,
+  getKanjiByJoyoLevelSchema,
   getKanjiDetailsSchema,
   getKanjiPageSchema,
   getKotowazaByKanjiSchema,
@@ -85,6 +86,20 @@ const getKanjiByJlptLevel = baseRouter
     return kanjiList;
   });
 
+const getKanjiByJoyoLevel = baseRouter
+  .input(getKanjiByJoyoLevelSchema)
+  .handler(({ input }) => {
+    const kanjiList = kanjiService.getKanjiByJoyoLevel(input);
+
+    if (kanjiList.length === 0) {
+      throw new ORPCError('NOT_FOUND', {
+        message: `No kanji found for Joyo level: ${input.level}`,
+      });
+    }
+
+    return kanjiList;
+  });
+
 export const kanjiRouter = {
   getAllKanji,
   getKanjiPage,
@@ -93,4 +108,5 @@ export const kanjiRouter = {
   getKotowazaByKanji,
   getRandomKotowaza,
   getKanjiByJlptLevel,
+  getKanjiByJoyoLevel,
 };
