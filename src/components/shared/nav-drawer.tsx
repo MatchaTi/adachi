@@ -57,8 +57,8 @@ const NAV_TREE: NavTreeItem[] = [
   { name: 'hiragana', subtitle: 'ひらがな', to: '/hiragana' },
   { name: 'katakana', subtitle: 'カタカナ', to: '/katakana' },
   { name: 'kanji', subtitle: '漢字', to: '/kanji' },
-  { name: 'analyze', subtitle: '解析', to: '/analyze' },
   { name: 'kotowaza', subtitle: 'ことわざ', to: '/kotowaza' },
+  { name: 'analyze', subtitle: '解析', to: '/analyze' },
   { name: 'jlpt', subtitle: '日本語能力試験', to: '/jlpt' },
   {
     name: 'jlpt-levels',
