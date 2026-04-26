@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import {
+  Book,
   Languages,
   Layers,
   MessageSquareText,
@@ -42,6 +43,12 @@ const FEATURE_ITEMS = [
       'Break down Japanese sentences into tokens, readings, script types, and parts of speech',
     icon: MessageSquareText,
   },
+  {
+    title: 'Kotowaza',
+    description:
+      'Explore a curated collection of Japanese proverbs with meanings, equivalents, and examples',
+    icon: Book,
+  },
 ];
 
 function App() {
@@ -64,6 +71,9 @@ function App() {
           </Button>
           <Button asChild>
             <Link to='/kanji'>漢 Kanji</Link>
+          </Button>
+          <Button asChild>
+            <Link to='/kotowaza'>ことわざ Kotowaza</Link>
           </Button>
           <Button asChild variant='outline'>
             <Link to='/analyze'>解析 Analyze</Link>

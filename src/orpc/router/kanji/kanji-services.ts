@@ -1,5 +1,10 @@
 import kanji from 'kanji-data';
-import type { GetKanjiDetailsInput, GetKanjiPageInput } from './kanji-schema';
+import kotowaza from 'kotowaza';
+import type {
+  GetKanjiDetailsInput,
+  GetKanjiPageInput,
+  GetKotowazaByKanjiInput,
+} from './kanji-schema';
 
 // service: panggil repository untuk CRUD logic
 const getAllKanji = () => {
@@ -60,9 +65,31 @@ const getRandomKanji = () => {
   return randomKanji;
 };
 
+const getKotowazaByKanji = (input: GetKotowazaByKanjiInput) => {
+  const kotowazaList = kotowaza.search(input.character);
+
+  if (kotowazaList.length === 0) {
+    return [];
+  }
+
+  return kotowazaList;
+};
+
+const getRandomKotowaza = () => {
+  const randomKotowaza = kotowaza.random();
+
+  if (!randomKotowaza) {
+    return null;
+  }
+
+  return randomKotowaza;
+};
+
 export const kanjiService = {
   getAllKanji,
   getKanjiPage,
   getKanjiDetails,
   getRandomKanji,
+  getKotowazaByKanji,
+  getRandomKotowaza,
 };

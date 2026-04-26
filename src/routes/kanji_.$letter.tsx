@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import type { ErrorComponentProps } from '@tanstack/react-router';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { ArrowLeft, PencilLine, RotateCcw, TriangleAlert } from 'lucide-react';
@@ -99,6 +99,16 @@ function RouteComponent() {
       input: { character: letter },
     }),
   );
+  const {
+    data: kotowazaList = [],
+    isError: isKotowazaError,
+    isPending: isKotowazaPending,
+    error: kotowazaError,
+  } = useQuery(
+    orpc.kanji.getKotowazaByKanji.queryOptions({
+      input: { character: letter },
+    }),
+  );
 
   const [mode, setMode] = useState<'learn' | 'write'>('learn');
   const [isWriterReady, setIsWriterReady] = useState(false);
@@ -123,6 +133,10 @@ function RouteComponent() {
     : [];
   const primaryMeaning = meaningList[0] ?? '-';
   const meaningText = meaningList.length > 0 ? meaningList.join(', ') : '-';
+  const kotowazaMessage =
+    kotowazaError instanceof Error
+      ? kotowazaError.message
+      : 'Kotowaza untuk kanji ini belum tersedia.';
 
   useEffect(() => {
     let disposed = false;
@@ -265,7 +279,7 @@ function RouteComponent() {
           </p>
         </section>
 
-        <Card className='border-border bg-card/70 p-3 shadow-none rounded-none'>
+        <Card className='rounded-none border-border bg-card/70 p-3 shadow-none'>
           <p className='mb-2 text-xs tracking-[0.2em] text-muted-foreground uppercase'>
             Stroke Order
           </p>
@@ -460,6 +474,100 @@ function RouteComponent() {
               </p>
             </div>
           </div>
+        </Card>
+
+        <Card className='rounded-none border-border bg-card/70 p-4 shadow-none'>
+          <div className='flex flex-col gap-2 border-b border-border/60 pb-3 sm:flex-row sm:items-end sm:justify-between'>
+            <div>
+              <p className='text-xs tracking-[0.2em] text-muted-foreground uppercase'>
+                Kotowaza
+              </p>
+              <h2 className='mt-1 text-3xl leading-none'>Related Proverbs</h2>
+            </div>
+            <p className='text-sm text-muted-foreground'>
+              {isKotowazaPending
+                ? 'Loading kotowaza...'
+                : `${kotowazaList.length} result${kotowazaList.length === 1 ? '' : 's'}`}
+            </p>
+          </div>
+
+          {isKotowazaError ? (
+            <div className='mt-4 border border-border/70 bg-background p-4 text-sm text-muted-foreground'>
+              {kotowazaMessage}
+            </div>
+          ) : kotowazaList.length > 0 ? (
+            <div className='mt-4 grid gap-4 lg:grid-cols-2'>
+              {kotowazaList.map((item) => (
+                <article
+                  key={item.id}
+                  className='border border-border/70 bg-background p-4'
+                >
+                  <div className='flex flex-wrap items-start justify-between gap-3'>
+                    <div>
+                      <p className='font-sans-jp text-2xl leading-none'>
+                        {item.japanese}
+                      </p>
+                      <p className='mt-2 text-sm tracking-[0.12em] text-muted-foreground uppercase'>
+                        {item.romaji}
+                      </p>
+                    </div>
+                    {item.jlpt ? (
+                      <span className='border border-border/70 px-2 py-1 text-xs tracking-[0.16em] text-muted-foreground uppercase'>
+                        {item.jlpt}
+                      </span>
+                    ) : null}
+                  </div>
+
+                  <p className='mt-4 text-sm leading-6 text-foreground/90'>
+                    {item.meaning?.en ?? item.literal}
+                  </p>
+
+                  <div className='mt-4 grid gap-3 sm:grid-cols-2'>
+                    <div className='space-y-1 border-l-2 border-foreground/90 pl-3'>
+                      <p className='text-xs tracking-[0.16em] text-muted-foreground uppercase'>
+                        Reading
+                      </p>
+                      <p className='text-sm'>{item.reading}</p>
+                    </div>
+                    <div className='space-y-1 border-l-2 border-border/80 pl-3'>
+                      <p className='text-xs tracking-[0.16em] text-muted-foreground uppercase'>
+                        Literal
+                      </p>
+                      <p className='text-sm'>{item.literal}</p>
+                    </div>
+                  </div>
+
+                  {item.examples?.[0] ? (
+                    <div className='mt-4 border-t border-border/60 pt-3'>
+                      <p className='text-xs tracking-[0.16em] text-muted-foreground uppercase'>
+                        Example
+                      </p>
+                      <p className='mt-2 text-sm leading-6 text-muted-foreground'>
+                        {item.examples[0].ja}
+                      </p>
+                    </div>
+                  ) : null}
+
+                  {item.tags?.length ? (
+                    <div className='mt-4 flex flex-wrap gap-2'>
+                      {item.tags.map((tag) => (
+                        <span
+                          key={`${item.id}-${tag}`}
+                          className='border border-border/70 bg-card px-2 py-1 text-xs text-muted-foreground'
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className='mt-4 border border-dashed border-border/70 bg-background p-4 text-sm text-muted-foreground'>
+              No kotowaza found for this kanji.
+            </div>
+          )}
         </Card>
 
         <Card className='rounded-none border-border bg-card/70 p-4 shadow-none'>
