@@ -38,6 +38,18 @@ const FEATURE_ITEMS = [
     icon: Layers,
   },
   {
+    title: 'JLPT Kanji Sets',
+    description:
+      'Study essential kanji organized by JLPT level, from N5 to N1, with readings and examples',
+    icon: Book,
+  },
+  {
+    title: 'Joyo Grade Path',
+    description:
+      'Study the official school-grade kanji sequence from Grade 1 through Grade 6 in a structured path',
+    icon: Book,
+  },
+  {
     title: 'Sentence Analysis',
     description:
       'Break down Japanese sentences into tokens, readings, script types, and parts of speech',
@@ -55,6 +67,7 @@ const NAV_ITEMS = [
   { label: 'あ Hiragana', to: '/hiragana' },
   { label: 'ア Katakana', to: '/katakana' },
   { label: '漢 Kanji', to: '/kanji' },
+  { label: '常 Joyo', to: '/joyo' },
   { label: 'ことわざ Kotowaza', to: '/kotowaza' },
   { label: 'JLPT Kanji', to: '/jlpt' },
   { label: '解析 Analyze', to: '/analyze' },

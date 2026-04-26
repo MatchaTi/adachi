@@ -31,15 +31,17 @@ import { Heading } from './heading';
 type NavLeafItem = {
   name: string;
   subtitle?: string;
-  to:
+  to?:
     | '/'
     | '/hiragana'
     | '/katakana'
     | '/kanji'
+    | '/joyo'
     | '/analyze'
     | '/kotowaza'
     | '/jlpt'
     | '/jlpt/$n';
+  href?: string;
   params?: {
     n: string;
   };
@@ -57,9 +59,21 @@ const NAV_TREE: NavTreeItem[] = [
   { name: 'hiragana', subtitle: 'ひらがな', to: '/hiragana' },
   { name: 'katakana', subtitle: 'カタカナ', to: '/katakana' },
   { name: 'kanji', subtitle: '漢字', to: '/kanji' },
+  { name: 'joyo', subtitle: '常用漢字', to: '/joyo' },
   { name: 'kotowaza', subtitle: 'ことわざ', to: '/kotowaza' },
   { name: 'analyze', subtitle: '解析', to: '/analyze' },
   { name: 'jlpt', subtitle: '日本語能力試験', to: '/jlpt' },
+  {
+    name: 'joyo-levels',
+    items: [
+      { name: 'joyo-g1', subtitle: 'grade 1', href: '/joyo/1' },
+      { name: 'joyo-g2', subtitle: 'grade 2', href: '/joyo/2' },
+      { name: 'joyo-g3', subtitle: 'grade 3', href: '/joyo/3' },
+      { name: 'joyo-g4', subtitle: 'grade 4', href: '/joyo/4' },
+      { name: 'joyo-g5', subtitle: 'grade 5', href: '/joyo/5' },
+      { name: 'joyo-g6', subtitle: 'grade 6', href: '/joyo/6' },
+    ],
+  },
   {
     name: 'jlpt-levels',
     items: [
@@ -146,6 +160,33 @@ function renderNavItem(item: NavTreeItem) {
         )}
       </Link>
     );
+  }
+
+  if (item.href) {
+    return (
+      <DrawerClose asChild key={item.name}>
+        <Button
+          variant='link'
+          size='sm'
+          asChild
+          className='w-full justify-start gap-2 text-foreground'
+        >
+          <a href={item.href}>
+            <FileIcon />
+            <span>{item.name}</span>
+            {item.subtitle ? (
+              <span className='text-xs text-muted-foreground'>
+                {item.subtitle}
+              </span>
+            ) : null}
+          </a>
+        </Button>
+      </DrawerClose>
+    );
+  }
+
+  if (!item.to) {
+    return null;
   }
 
   return (
