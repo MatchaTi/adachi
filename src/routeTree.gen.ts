@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as KotowazaRouteImport } from './routes/kotowaza'
 import { Route as KatakanaRouteImport } from './routes/katakana'
 import { Route as KanjiRouteImport } from './routes/kanji'
 import { Route as HiraganaRouteImport } from './routes/hiragana'
@@ -21,6 +22,11 @@ import { Route as HiraganaLetterRouteImport } from './routes/hiragana_.$letter'
 import { Route as ApiSplatRouteImport } from './routes/api.$'
 import { Route as ApiRpcSplatRouteImport } from './routes/api.rpc.$'
 
+const KotowazaRoute = KotowazaRouteImport.update({
+  id: '/kotowaza',
+  path: '/kotowaza',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const KatakanaRoute = KatakanaRouteImport.update({
   id: '/katakana',
   path: '/katakana',
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/hiragana': typeof HiraganaRoute
   '/kanji': typeof KanjiRoute
   '/katakana': typeof KatakanaRoute
+  '/kotowaza': typeof KotowazaRoute
   '/api/$': typeof ApiSplatRoute
   '/hiragana/$letter': typeof HiraganaLetterRoute
   '/kanji/$letter': typeof KanjiLetterRoute
@@ -97,6 +104,7 @@ export interface FileRoutesByTo {
   '/hiragana': typeof HiraganaRoute
   '/kanji': typeof KanjiRoute
   '/katakana': typeof KatakanaRoute
+  '/kotowaza': typeof KotowazaRoute
   '/api/$': typeof ApiSplatRoute
   '/hiragana/$letter': typeof HiraganaLetterRoute
   '/kanji/$letter': typeof KanjiLetterRoute
@@ -111,6 +119,7 @@ export interface FileRoutesById {
   '/hiragana': typeof HiraganaRoute
   '/kanji': typeof KanjiRoute
   '/katakana': typeof KatakanaRoute
+  '/kotowaza': typeof KotowazaRoute
   '/api/$': typeof ApiSplatRoute
   '/hiragana_/$letter': typeof HiraganaLetterRoute
   '/kanji_/$letter': typeof KanjiLetterRoute
@@ -126,6 +135,7 @@ export interface FileRouteTypes {
     | '/hiragana'
     | '/kanji'
     | '/katakana'
+    | '/kotowaza'
     | '/api/$'
     | '/hiragana/$letter'
     | '/kanji/$letter'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/hiragana'
     | '/kanji'
     | '/katakana'
+    | '/kotowaza'
     | '/api/$'
     | '/hiragana/$letter'
     | '/kanji/$letter'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/hiragana'
     | '/kanji'
     | '/katakana'
+    | '/kotowaza'
     | '/api/$'
     | '/hiragana_/$letter'
     | '/kanji_/$letter'
@@ -166,6 +178,7 @@ export interface RootRouteChildren {
   HiraganaRoute: typeof HiraganaRoute
   KanjiRoute: typeof KanjiRoute
   KatakanaRoute: typeof KatakanaRoute
+  KotowazaRoute: typeof KotowazaRoute
   ApiSplatRoute: typeof ApiSplatRoute
   HiraganaLetterRoute: typeof HiraganaLetterRoute
   KanjiLetterRoute: typeof KanjiLetterRoute
@@ -175,6 +188,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/kotowaza': {
+      id: '/kotowaza'
+      path: '/kotowaza'
+      fullPath: '/kotowaza'
+      preLoaderRoute: typeof KotowazaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/katakana': {
       id: '/katakana'
       path: '/katakana'
@@ -262,6 +282,7 @@ const rootRouteChildren: RootRouteChildren = {
   HiraganaRoute: HiraganaRoute,
   KanjiRoute: KanjiRoute,
   KatakanaRoute: KatakanaRoute,
+  KotowazaRoute: KotowazaRoute,
   ApiSplatRoute: ApiSplatRoute,
   HiraganaLetterRoute: HiraganaLetterRoute,
   KanjiLetterRoute: KanjiLetterRoute,

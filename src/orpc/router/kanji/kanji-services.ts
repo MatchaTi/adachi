@@ -75,10 +75,21 @@ const getKotowazaByKanji = (input: GetKotowazaByKanjiInput) => {
   return kotowazaList;
 };
 
+const getRandomKotowaza = () => {
+  const randomKotowaza = kotowaza.random();
+
+  if (!randomKotowaza) {
+    return null;
+  }
+
+  return randomKotowaza;
+};
+
 export const kanjiService = {
   getAllKanji,
   getKanjiPage,
   getKanjiDetails,
   getRandomKanji,
   getKotowazaByKanji,
+  getRandomKotowaza,
 };

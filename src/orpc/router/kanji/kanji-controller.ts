@@ -58,10 +58,23 @@ const getKotowazaByKanji = baseRouter
     return kotowazaList;
   });
 
+const getRandomKotowaza = baseRouter.handler(() => {
+  const randommKotowaza = kanjiService.getRandomKotowaza();
+
+  if (!randommKotowaza) {
+    throw new ORPCError('NOT_FOUND', {
+      message: 'No kotowaza found',
+    });
+  }
+
+  return randommKotowaza;
+});
+
 export const kanjiRouter = {
   getAllKanji,
   getKanjiPage,
   getKanjiDetails,
   getRandomKanji,
   getKotowazaByKanji,
+  getRandomKotowaza,
 };
