@@ -7,6 +7,7 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
+  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -58,18 +59,24 @@ export function NavDrawer() {
           </DrawerClose>
         </DrawerHeader>
         <ul className='px-4 grid gap-4'>
+          <DrawerDescription>
+            Menu for navigating between different pages. Click on an item to go
+            to the corresponding page.
+          </DrawerDescription>
           <Separator />
           {NAV_ITEMS.map((item) => (
             <Link key={item.to} to={item.to}>
               {({ isActive }) => (
-                <div
-                  className={cn(
-                    isActive ? 'opacity-100' : 'opacity-50 hover:opacity-100',
-                  )}
-                >
-                  <Heading level='h6'>{item.label}</Heading>
-                  <p>{item.char}</p>
-                </div>
+                <DrawerClose asChild>
+                  <div
+                    className={cn(
+                      isActive ? 'opacity-100' : 'opacity-50 hover:opacity-100',
+                    )}
+                  >
+                    <Heading level='h6'>{item.label}</Heading>
+                    <p>{item.char}</p>
+                  </div>
+                </DrawerClose>
               )}
             </Link>
           ))}
