@@ -19,7 +19,7 @@ function RouteComponent() {
         heading='Disclaimer'
         description={description}
       />
-      <div className='prose max-w-none leading-relaxed space-y-8'>
+      <div className='prose max-w-none leading-relaxed space-y-8 dark:prose-invert'>
         <p className='italic'>Last Update: {lastUpdated}</p>
 
         <section>
