@@ -5,8 +5,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 import { FlashcardPanel } from '@/components/shared/flashcard-panel';
 import Hero from '@/components/shared/hero';
+import { StudyCharacterCard } from '@/components/shared/study-character-card';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -219,14 +219,10 @@ function RouteComponent() {
         </div>
       </div>
 
-      <section className='mt-4 grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
+      <section className='mt-4 grid gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
         {kanjiList.map((char) => (
           <Link to='/kanji/$letter' params={{ letter: char }} key={char}>
-            <Card className='rounded-none border-border shadow-none sm:aspect-square'>
-              <CardHeader>
-                <CardTitle className='text-[5vh]'>{char}</CardTitle>
-              </CardHeader>
-            </Card>
+            <StudyCharacterCard character={char} badge='Kanji' />
           </Link>
         ))}
       </section>

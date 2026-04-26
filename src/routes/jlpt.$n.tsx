@@ -3,8 +3,8 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { ArrowLeft, RefreshCcw } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import Hero from '@/components/shared/hero';
+import { StudyCharacterCard } from '@/components/shared/study-character-card';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Spinner } from '@/components/ui/spinner';
 import { orpc } from '@/orpc/client';
@@ -144,19 +144,7 @@ function RouteComponent() {
         <section className='grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
           {kanjiList.map((char) => (
             <Link to='/kanji/$letter' params={{ letter: char }} key={char}>
-              <Card className='group relative overflow-hidden rounded-none border-border bg-card/70 shadow-none transition-transform duration-200 hover:-translate-y-1 hover:shadow-sm sm:aspect-square'>
-                <div className='pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-[size:56px_56px] opacity-0 transition-opacity duration-200 group-hover:opacity-40' />
-                <CardHeader className='relative flex h-full items-center justify-center p-6'>
-                  <div className='flex flex-col items-center gap-3 text-center'>
-                    <CardTitle className='font-sans-jp text-[clamp(2.75rem,6vw,4.75rem)] leading-none'>
-                      {char}
-                    </CardTitle>
-                    <span className='rounded-full border border-border/70 px-2.5 py-1 text-[10px] tracking-[0.18em] text-muted-foreground uppercase'>
-                      JLPT N{level}
-                    </span>
-                  </div>
-                </CardHeader>
-              </Card>
+              <StudyCharacterCard character={char} badge={`JLPT N${level}`} />
             </Link>
           ))}
         </section>
