@@ -51,6 +51,15 @@ const FEATURE_ITEMS = [
   },
 ];
 
+const NAV_ITEMS = [
+  { label: 'あ Hiragana', to: '/hiragana' },
+  { label: 'ア Katakana', to: '/katakana' },
+  { label: '漢 Kanji', to: '/kanji' },
+  { label: 'ことわざ Kotowaza', to: '/kotowaza' },
+  { label: 'JLPT Kanji', to: '/jlpt' },
+  { label: '解析 Analyze', to: '/analyze' },
+];
+
 function App() {
   const description =
     'Learn Japanese scripts with searchable character grids, writing practice, flashcard drills, and sentence analysis.';
@@ -63,25 +72,15 @@ function App() {
         description={description}
       >
         <div className='flex items-center flex-wrap gap-2'>
-          <Button asChild>
-            <Link to='/hiragana'>あ Hiragana</Link>
-          </Button>
-          <Button asChild>
-            <Link to='/katakana'>ア Katakana</Link>
-          </Button>
-          <Button asChild>
-            <Link to='/kanji'>漢 Kanji</Link>
-          </Button>
-          <Button asChild>
-            <Link to='/kotowaza'>ことわざ Kotowaza</Link>
-          </Button>
-          <Button asChild variant='outline'>
-            <Link to='/analyze'>解析 Analyze</Link>
-          </Button>
+          {NAV_ITEMS.map((item) => (
+            <Button asChild key={item.to}>
+              <Link to={item.to}>{item.label}</Link>
+            </Button>
+          ))}
         </div>
       </Hero>
 
-      <section className='grid md:grid-cols-2'>
+      <section className='grid gap-4 md:grid-cols-2'>
         {FEATURE_ITEMS.map((item) => (
           <Card
             key={item.title}

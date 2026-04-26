@@ -9,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Spinner } from '@/components/ui/spinner';
 import { orpc } from '@/orpc/client';
 
-export const Route = createFileRoute('/jlpt/$n')({
+export const Route = createFileRoute('/jlpt_/$n')({
   component: RouteComponent,
 });
 
@@ -38,7 +38,7 @@ function RouteComponent() {
   const levelButtons = [1, 2, 3, 4, 5];
 
   return (
-    <main className='mx-auto flex w-full max-w-7xl flex-col gap-8'>
+    <main>
       <Hero
         badge='日本語能力試験'
         heading={`JLPT N${n}`}
