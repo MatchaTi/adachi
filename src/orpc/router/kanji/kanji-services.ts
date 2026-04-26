@@ -2,6 +2,7 @@ import kanji from 'kanji-data';
 import kotowaza from 'kotowaza';
 import type {
   GetKanjiByJlptLevelInput,
+  GetKanjiByJoyoLevelInput,
   GetKanjiDetailsInput,
   GetKanjiPageInput,
   GetKotowazaByKanjiInput,
@@ -96,6 +97,16 @@ const getKanjiByJlptLevel = (input: GetKanjiByJlptLevelInput) => {
   return kanjiList;
 };
 
+const getKanjiByJoyoLevel = (input: GetKanjiByJoyoLevelInput) => {
+  const kanjiList = kanji.getGrade(input.level);
+
+  if (kanjiList.length === 0) {
+    return [];
+  }
+
+  return kanjiList;
+};
+
 export const kanjiService = {
   getAllKanji,
   getKanjiPage,
@@ -104,4 +115,5 @@ export const kanjiService = {
   getKotowazaByKanji,
   getRandomKotowaza,
   getKanjiByJlptLevel,
+  getKanjiByJoyoLevel,
 };
