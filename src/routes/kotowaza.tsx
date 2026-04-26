@@ -3,6 +3,7 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { ArrowRight, RefreshCcw, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { Heading } from '@/components/shared/heading';
+import Hero from '@/components/shared/hero';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -34,44 +35,30 @@ function RouteComponent() {
       ? error.message
       : 'Kotowaza acak belum tersedia saat ini.';
 
+  const description =
+    'Generate a random kotowaza, read the Japanese phrase, and study its meaning, literal sense, and related notes in one focused view.';
+
   return (
-    <main className='mx-auto flex w-full max-w-7xl flex-col gap-8'>
-      <section className='relative overflow-hidden border border-border/70 bg-card/80 px-6 py-8 sm:px-8 sm:py-10'>
-        <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_35%),linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-[size:auto,56px_56px,56px_56px] opacity-60' />
-
-        <div className='relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between'>
-          <div className='max-w-3xl space-y-4'>
-            <p className='text-[11px] tracking-[0.24em] text-muted-foreground uppercase'>
-              Random Kotowaza
-            </p>
-            <Heading level='h1' className='text-4xl leading-tight sm:text-5xl'>
-              One proverb, fully unpacked.
-            </Heading>
-            <p className='max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base'>
-              Generate a random kotowaza, read the Japanese phrase, and study
-              its meaning, literal sense, and related notes in one focused view.
-            </p>
-          </div>
-
-          <div className='flex flex-wrap gap-3'>
-            <Button
-              type='button'
-              onClick={() => setShuffleCount((count) => count + 1)}
-              disabled={isFetching}
-              className='min-w-40'
-            >
-              <RefreshCcw className={isFetching ? 'animate-spin' : undefined} />
-              Generate another
-            </Button>
-            <Button asChild variant='outline'>
-              <Link to='/kanji'>
-                <ArrowRight />
-                Study kanji
-              </Link>
-            </Button>
-          </div>
+    <main>
+      <Hero badge='ことわざ' heading='Kotowaza' description={description}>
+        <div className='flex flex-wrap gap-3'>
+          <Button
+            type='button'
+            onClick={() => setShuffleCount((count) => count + 1)}
+            disabled={isFetching}
+            className='min-w-40'
+          >
+            <RefreshCcw className={isFetching ? 'animate-spin' : undefined} />
+            Generate another
+          </Button>
+          <Button asChild variant='outline'>
+            <Link to='/kanji'>
+              <ArrowRight />
+              Study kanji
+            </Link>
+          </Button>
         </div>
-      </section>
+      </Hero>
 
       {isError ? (
         <Card className='border-border bg-card/70 p-4 shadow-none'>
