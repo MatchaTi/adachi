@@ -141,7 +141,7 @@ function RouteComponent() {
       ) : null}
 
       {isValidLevel && kanjiList.length > 0 ? (
-        <section className='grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
+        <section className='mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
           {kanjiList.map((char) => (
             <Link to='/kanji/$letter' params={{ letter: char }} key={char}>
               <StudyCharacterCard character={char} badge={`JLPT N${level}`} />
