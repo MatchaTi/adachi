@@ -67,3 +67,11 @@ bun run test
 - The kana dataset includes both Hiragana and Katakana rows.
 - Hiragana writing practice is implemented with a client-only dynamic import to avoid SSR issues.
 
+## Goals for the future:
+
+- [ ] SEO optimization for better discoverability.
+- [ ] Enhance the flashcard functionality with spaced repetition.
+- [ ] Add more interactive writing exercises and quizzes.
+- [ ] Implement local storage or user accounts for progress tracking (day streaks, character mastery, activity like github commit, etc.).
+- [ ] Backup and import/export functionality for user data.
+- [ ] Share progress generator for social media like instagram feed or story.
