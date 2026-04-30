@@ -75,3 +75,8 @@ bun run test
 - [ ] Implement local storage or user accounts for progress tracking (day streaks, character mastery, activity like github commit, etc.).
 - [ ] Backup and import/export functionality for user data.
 - [ ] Share progress generator for social media like instagram feed or story.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
