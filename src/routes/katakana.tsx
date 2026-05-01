@@ -19,6 +19,16 @@ import { Spinner } from '@/components/ui/spinner';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/katakana')({
+  head: () => ({
+    meta: [
+      { title: 'Katakana - Adachi' },
+      {
+        name: 'description',
+        content:
+          'Master Katakana with interactive writing practice, flashcard drills, and comprehensive character study.',
+      },
+    ],
+  }),
   component: RouteComponent,
   pendingComponent: RoutePending,
   loader: async ({ context }) => {

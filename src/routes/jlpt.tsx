@@ -5,6 +5,16 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
 export const Route = createFileRoute('/jlpt')({
+  head: () => ({
+    meta: [
+      { title: 'JLPT Kanji - Adachi' },
+      {
+        name: 'description',
+        content:
+          'Explore kanji sets organized by JLPT level from N5 to N1 with essential characters, readings, and meanings.',
+      },
+    ],
+  }),
   component: RouteComponent,
 });
 

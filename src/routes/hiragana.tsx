@@ -19,6 +19,16 @@ import { Spinner } from '@/components/ui/spinner';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/hiragana')({
+  head: () => ({
+    meta: [
+      { title: 'Hiragana - Adachi' },
+      {
+        name: 'description',
+        content:
+          'Learn Hiragana with interactive writing practice, flashcard drills, and searchable character grids.',
+      },
+    ],
+  }),
   component: RouteComponent,
   pendingComponent: RoutePending,
   loader: async ({ context }) => {

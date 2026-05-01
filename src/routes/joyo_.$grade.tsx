@@ -10,6 +10,15 @@ import { Spinner } from '@/components/ui/spinner';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/joyo_/$grade')({
+  head: ({ params }) => ({
+    meta: [
+      { title: `Joyo Grade ${params.grade} Kanji - Adachi` },
+      {
+        name: 'description',
+        content: `Study Joyo Grade ${params.grade} kanji organized by school grade. Learn official commonly-used kanji in a structured path.`,
+      },
+    ],
+  }),
   component: RouteComponent,
 });
 

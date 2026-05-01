@@ -10,6 +10,16 @@ import { Card } from '@/components/ui/card';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/kotowaza')({
+  head: () => ({
+    meta: [
+      { title: 'Kotowaza - Japanese Proverbs - Adachi' },
+      {
+        name: 'description',
+        content:
+          'Explore curated Japanese proverbs with meanings, equivalents, examples, and contextual usage.',
+      },
+    ],
+  }),
   component: RouteComponent,
 });
 

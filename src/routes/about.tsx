@@ -1,6 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/about')({
+  head: () => ({
+    meta: [
+      { title: 'About - Adachi' },
+      {
+        name: 'description',
+        content:
+          'Learn more about Adachi, a Japanese kana and kanji learning app built with Vite, React, and TanStack.',
+      },
+    ],
+  }),
   component: About,
 });
 

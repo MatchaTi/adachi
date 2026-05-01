@@ -4,6 +4,16 @@ import Hero from '@/components/shared/hero';
 import { PROJECT_NAME } from '@/infra/lib/constants';
 
 export const Route = createFileRoute('/disclaimer')({
+  head: () => ({
+    meta: [
+      { title: 'Disclaimer - Adachi' },
+      {
+        name: 'description',
+        content:
+          'Important disclaimer and information about the Adachi Japanese learning application.',
+      },
+    ],
+  }),
   component: RouteComponent,
 });
 

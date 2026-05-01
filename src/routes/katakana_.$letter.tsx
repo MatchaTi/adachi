@@ -10,6 +10,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/katakana_/$letter')({
+  head: ({ params }) => ({
+    meta: [
+      { title: `Katakana ${params.letter} - Adachi` },
+      {
+        name: 'description',
+        content: `Learn to write and read Katakana ${params.letter} with interactive stroke order practice and detailed guides.`,
+      },
+    ],
+  }),
   component: RouteComponent,
   loader: async ({ context, params }) => {
     await context.queryClient.fetchQuery(

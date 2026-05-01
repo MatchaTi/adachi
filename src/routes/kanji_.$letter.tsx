@@ -10,6 +10,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/kanji_/$letter')({
+  head: ({ params }) => ({
+    meta: [
+      { title: `Kanji ${params.letter} - Adachi` },
+      {
+        name: 'description',
+        content: `Study Kanji ${params.letter} with animated stroke order, readings, meanings, example words, and interactive writing practice.`,
+      },
+    ],
+  }),
   loader: async ({ context, params }) => {
     await context.queryClient.fetchQuery(
       orpc.letter.getKanji.queryOptions({

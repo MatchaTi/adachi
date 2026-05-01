@@ -45,6 +45,16 @@ function formatTokenLabel(token: AnalyzeResponse['tokens'][number]) {
 }
 
 export const Route = createFileRoute('/analyze')({
+  head: () => ({
+    meta: [
+      { title: 'Sentence Analysis - Adachi' },
+      {
+        name: 'description',
+        content:
+          'Break down Japanese sentences into tokens, readings, script types, and parts of speech with detailed analysis.',
+      },
+    ],
+  }),
   component: RouteComponent,
 });
 

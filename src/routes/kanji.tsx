@@ -20,6 +20,16 @@ import { Spinner } from '@/components/ui/spinner';
 import { client, orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/kanji')({
+  head: () => ({
+    meta: [
+      { title: 'Kanji - Adachi' },
+      {
+        name: 'description',
+        content:
+          'Study kanji with animated stroke order, interactive writing practice, and flashcard drills.',
+      },
+    ],
+  }),
   component: RouteComponent,
   errorComponent: () => <div>Error</div>,
 });

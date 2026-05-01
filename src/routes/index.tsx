@@ -16,7 +16,19 @@ import {
 } from '@/components/ui/card';
 import { PROJECT_NAME, PROJECT_NAME_HIRAGANA } from '@/infra/lib/constants';
 
-export const Route = createFileRoute('/')({ component: App });
+export const Route = createFileRoute('/')({
+  head: () => ({
+    meta: [
+      {
+        title: PROJECT_NAME,
+        name: 'description',
+        content:
+          'Learn Japanese scripts with searchable character grids, writing practice, flashcard drills, and sentence analysis.',
+      },
+    ],
+  }),
+  component: App,
+});
 
 const FEATURE_ITEMS = [
   {

@@ -5,6 +5,16 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
 export const Route = createFileRoute('/joyo')({
+  head: () => ({
+    meta: [
+      { title: 'Joyo Kanji - Adachi' },
+      {
+        name: 'description',
+        content:
+          'Study Joyo kanji organized by school grade from Grade 1 to Grade 6 in a structured learning path.',
+      },
+    ],
+  }),
   component: RouteComponent,
 });
 

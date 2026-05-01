@@ -10,6 +10,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/hiragana_/$letter')({
+  head: ({ params }) => ({
+    meta: [
+      { title: `Hiragana ${params.letter} - Adachi` },
+      {
+        name: 'description',
+        content: `Learn to write and read Hiragana ${params.letter} with interactive stroke order practice and detailed guides.`,
+      },
+    ],
+  }),
   component: RouteComponent,
   loader: async ({ context, params }) => {
     await context.queryClient.fetchQuery(
