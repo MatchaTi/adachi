@@ -7,19 +7,17 @@ import Hero from '@/components/shared/hero';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { buildSeoHead } from '@/lib/seo';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/kotowaza')({
-  head: () => ({
-    meta: [
-      { title: 'Kotowaza - Japanese Proverbs - Adachi' },
-      {
-        name: 'description',
-        content:
-          'Explore curated Japanese proverbs with meanings, equivalents, examples, and contextual usage.',
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: 'Kotowaza - Japanese Proverbs - Adachi',
+      description:
+        'Explore curated Japanese proverbs with meanings, equivalents, examples, and contextual usage.',
+      path: '/kotowaza',
+    }),
   component: RouteComponent,
 });
 

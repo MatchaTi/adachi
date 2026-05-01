@@ -7,18 +7,16 @@ import { Heading } from '@/components/shared/heading';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { buildSeoHead } from '@/lib/seo';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/katakana_/$letter')({
-  head: ({ params }) => ({
-    meta: [
-      { title: `Katakana ${params.letter} - Adachi` },
-      {
-        name: 'description',
-        content: `Learn to write and read Katakana ${params.letter} with interactive stroke order practice and detailed guides.`,
-      },
-    ],
-  }),
+  head: ({ params }) =>
+    buildSeoHead({
+      title: `Katakana ${params.letter} - Adachi`,
+      description: `Learn to write and read Katakana ${params.letter} with interactive stroke order practice and detailed guides.`,
+      path: `/katakana/${params.letter}`,
+    }),
   component: RouteComponent,
   loader: async ({ context, params }) => {
     await context.queryClient.fetchQuery(

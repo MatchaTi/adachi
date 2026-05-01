@@ -16,19 +16,17 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
+import { buildSeoHead } from '@/lib/seo';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/hiragana')({
-  head: () => ({
-    meta: [
-      { title: 'Hiragana - Adachi' },
-      {
-        name: 'description',
-        content:
-          'Learn Hiragana with interactive writing practice, flashcard drills, and searchable character grids.',
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: 'Hiragana - Adachi',
+      description:
+        'Learn Hiragana with interactive writing practice, flashcard drills, and searchable character grids.',
+      path: '/hiragana',
+    }),
   component: RouteComponent,
   pendingComponent: RoutePending,
   loader: async ({ context }) => {

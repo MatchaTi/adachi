@@ -2,18 +2,16 @@ import { createFileRoute } from '@tanstack/react-router';
 import { Heading } from '@/components/shared/heading';
 import Hero from '@/components/shared/hero';
 import { PROJECT_NAME } from '@/infra/lib/constants';
+import { buildSeoHead } from '@/lib/seo';
 
 export const Route = createFileRoute('/disclaimer')({
-  head: () => ({
-    meta: [
-      { title: 'Disclaimer - Adachi' },
-      {
-        name: 'description',
-        content:
-          'Important disclaimer and information about the Adachi Japanese learning application.',
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: 'Disclaimer - Adachi',
+      description:
+        'Important disclaimer and information about the Adachi Japanese learning application.',
+      path: '/disclaimer',
+    }),
   component: RouteComponent,
 });
 

@@ -15,18 +15,16 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { PROJECT_NAME, PROJECT_NAME_HIRAGANA } from '@/infra/lib/constants';
+import { buildSeoHead } from '@/lib/seo';
 
 export const Route = createFileRoute('/')({
-  head: () => ({
-    meta: [
-      {
-        title: PROJECT_NAME,
-        name: 'description',
-        content:
-          'Learn Japanese scripts with searchable character grids, writing practice, flashcard drills, and sentence analysis.',
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: PROJECT_NAME,
+      description:
+        'Learn Japanese scripts with searchable character grids, writing practice, flashcard drills, and sentence analysis.',
+      path: '/',
+    }),
   component: App,
 });
 

@@ -7,18 +7,16 @@ import { StudyCharacterCard } from '@/components/shared/study-character-card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Spinner } from '@/components/ui/spinner';
+import { buildSeoHead } from '@/lib/seo';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/jlpt_/$n')({
-  head: ({ params }) => ({
-    meta: [
-      { title: `JLPT N${params.n} Kanji - Adachi` },
-      {
-        name: 'description',
-        content: `Study JLPT N${params.n} kanji with essential characters, readings, and meanings. Prepare for the JLPT exam with comprehensive kanji sets.`,
-      },
-    ],
-  }),
+  head: ({ params }) =>
+    buildSeoHead({
+      title: `JLPT N${params.n} Kanji - Adachi`,
+      description: `Study JLPT N${params.n} kanji with essential characters, readings, and meanings. Prepare for the JLPT exam with comprehensive kanji sets.`,
+      path: `/jlpt/${params.n}`,
+    }),
   component: RouteComponent,
 });
 

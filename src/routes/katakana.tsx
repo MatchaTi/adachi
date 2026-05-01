@@ -16,19 +16,17 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
+import { buildSeoHead } from '@/lib/seo';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/katakana')({
-  head: () => ({
-    meta: [
-      { title: 'Katakana - Adachi' },
-      {
-        name: 'description',
-        content:
-          'Master Katakana with interactive writing practice, flashcard drills, and comprehensive character study.',
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: 'Katakana - Adachi',
+      description:
+        'Master Katakana with interactive writing practice, flashcard drills, and comprehensive character study.',
+      path: '/katakana',
+    }),
   component: RouteComponent,
   pendingComponent: RoutePending,
   loader: async ({ context }) => {

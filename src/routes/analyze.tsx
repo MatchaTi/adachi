@@ -15,6 +15,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { buildSeoHead } from '@/lib/seo';
 import { orpc } from '@/orpc/client';
 import {
   type AnalyzeResponse,
@@ -45,16 +46,13 @@ function formatTokenLabel(token: AnalyzeResponse['tokens'][number]) {
 }
 
 export const Route = createFileRoute('/analyze')({
-  head: () => ({
-    meta: [
-      { title: 'Sentence Analysis - Adachi' },
-      {
-        name: 'description',
-        content:
-          'Break down Japanese sentences into tokens, readings, script types, and parts of speech with detailed analysis.',
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: 'Sentence Analysis - Adachi',
+      description:
+        'Break down Japanese sentences into tokens, readings, script types, and parts of speech with detailed analysis.',
+      path: '/analyze',
+    }),
   component: RouteComponent,
 });
 

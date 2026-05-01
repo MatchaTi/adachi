@@ -3,18 +3,16 @@ import { ArrowRight } from 'lucide-react';
 import Hero from '@/components/shared/hero';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { buildSeoHead } from '@/lib/seo';
 
 export const Route = createFileRoute('/joyo')({
-  head: () => ({
-    meta: [
-      { title: 'Joyo Kanji - Adachi' },
-      {
-        name: 'description',
-        content:
-          'Study Joyo kanji organized by school grade from Grade 1 to Grade 6 in a structured learning path.',
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: 'Joyo Kanji - Adachi',
+      description:
+        'Study Joyo kanji organized by school grade from Grade 1 to Grade 6 in a structured learning path.',
+      path: '/joyo',
+    }),
   component: RouteComponent,
 });
 

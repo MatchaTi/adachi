@@ -7,18 +7,16 @@ import { Heading } from '@/components/shared/heading';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { buildSeoHead } from '@/lib/seo';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/kanji_/$letter')({
-  head: ({ params }) => ({
-    meta: [
-      { title: `Kanji ${params.letter} - Adachi` },
-      {
-        name: 'description',
-        content: `Study Kanji ${params.letter} with animated stroke order, readings, meanings, example words, and interactive writing practice.`,
-      },
-    ],
-  }),
+  head: ({ params }) =>
+    buildSeoHead({
+      title: `Kanji ${params.letter} - Adachi`,
+      description: `Study Kanji ${params.letter} with animated stroke order, readings, meanings, example words, and interactive writing practice.`,
+      path: `/kanji/${params.letter}`,
+    }),
   loader: async ({ context, params }) => {
     await context.queryClient.fetchQuery(
       orpc.letter.getKanji.queryOptions({

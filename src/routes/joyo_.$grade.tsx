@@ -7,18 +7,16 @@ import { StudyCharacterCard } from '@/components/shared/study-character-card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Spinner } from '@/components/ui/spinner';
+import { buildSeoHead } from '@/lib/seo';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/joyo_/$grade')({
-  head: ({ params }) => ({
-    meta: [
-      { title: `Joyo Grade ${params.grade} Kanji - Adachi` },
-      {
-        name: 'description',
-        content: `Study Joyo Grade ${params.grade} kanji organized by school grade. Learn official commonly-used kanji in a structured path.`,
-      },
-    ],
-  }),
+  head: ({ params }) =>
+    buildSeoHead({
+      title: `Joyo Grade ${params.grade} Kanji - Adachi`,
+      description: `Study Joyo Grade ${params.grade} kanji organized by school grade. Learn official commonly-used kanji in a structured path.`,
+      path: `/joyo/${params.grade}`,
+    }),
   component: RouteComponent,
 });
 

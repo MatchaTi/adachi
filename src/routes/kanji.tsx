@@ -17,19 +17,17 @@ import {
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Spinner } from '@/components/ui/spinner';
+import { buildSeoHead } from '@/lib/seo';
 import { client, orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/kanji')({
-  head: () => ({
-    meta: [
-      { title: 'Kanji - Adachi' },
-      {
-        name: 'description',
-        content:
-          'Study kanji with animated stroke order, interactive writing practice, and flashcard drills.',
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: 'Kanji - Adachi',
+      description:
+        'Study kanji with animated stroke order, interactive writing practice, and flashcard drills.',
+      path: '/kanji',
+    }),
   component: RouteComponent,
   errorComponent: () => <div>Error</div>,
 });
