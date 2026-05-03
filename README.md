@@ -69,13 +69,14 @@ bun run test
 
 ## Goals for the future:
 
-- [ ] SEO optimization for better discoverability.
+- [ ] SEO optimization for better discoverability. (sitemap, robots)
 - [ ] Enhance the flashcard functionality with spaced repetition.
 - [ ] Add more interactive writing exercises and quizzes.
 - [ ] Implement local storage or user accounts for progress tracking (day streaks, character mastery, activity like github commit, etc.).
 - [ ] Backup and import/export functionality for user data.
 - [ ] Share progress generator for social media like instagram feed or story.
 - [ ] Add furigana generation for kanji characters to expand the app's scope beyond kana.
+- [ ] Writing practice with sentence
 
 ## License
 
