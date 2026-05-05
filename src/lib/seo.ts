@@ -37,6 +37,20 @@ export function buildSeoHead({
 }: SeoHeadInput) {
   const canonicalUrl = toAbsoluteUrl(path);
   const imageUrl = toAbsoluteUrl(image ?? defaultImage);
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: canonicalUrl,
+    image: imageUrl,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: PROJECT_NAME,
+      url: siteUrl,
+    },
+    inLanguage: 'ja',
+  };
 
   return {
     meta: [
@@ -57,5 +71,11 @@ export function buildSeoHead({
       { name: 'twitter:image', content: imageUrl },
     ],
     links: [{ rel: 'canonical', href: canonicalUrl }],
+    scripts: [
+      {
+        type: 'application/ld+json',
+        children: JSON.stringify(jsonLd),
+      },
+    ],
   };
 }
