@@ -9,6 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SitemapStaticDotxmlRouteImport } from './routes/sitemap-static[.]xml'
+import { Route as SitemapDynamicDotxmlRouteImport } from './routes/sitemap-dynamic[.]xml'
 import { Route as KotowazaRouteImport } from './routes/kotowaza'
 import { Route as KatakanaRouteImport } from './routes/katakana'
 import { Route as KanjiRouteImport } from './routes/kanji'
@@ -27,6 +30,21 @@ import { Route as HiraganaLetterRouteImport } from './routes/hiragana_.$letter'
 import { Route as ApiSplatRouteImport } from './routes/api.$'
 import { Route as ApiRpcSplatRouteImport } from './routes/api.rpc.$'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapStaticDotxmlRoute = SitemapStaticDotxmlRouteImport.update({
+  id: '/sitemap-static.xml',
+  path: '/sitemap-static.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDynamicDotxmlRoute = SitemapDynamicDotxmlRouteImport.update({
+  id: '/sitemap-dynamic.xml',
+  path: '/sitemap-dynamic.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const KotowazaRoute = KotowazaRouteImport.update({
   id: '/kotowaza',
   path: '/kotowaza',
@@ -124,6 +142,9 @@ export interface FileRoutesByFullPath {
   '/kanji': typeof KanjiRoute
   '/katakana': typeof KatakanaRoute
   '/kotowaza': typeof KotowazaRoute
+  '/sitemap-dynamic.xml': typeof SitemapDynamicDotxmlRoute
+  '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/$': typeof ApiSplatRoute
   '/hiragana/$letter': typeof HiraganaLetterRoute
   '/jlpt/$n': typeof JlptNRoute
@@ -143,6 +164,9 @@ export interface FileRoutesByTo {
   '/kanji': typeof KanjiRoute
   '/katakana': typeof KatakanaRoute
   '/kotowaza': typeof KotowazaRoute
+  '/sitemap-dynamic.xml': typeof SitemapDynamicDotxmlRoute
+  '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/$': typeof ApiSplatRoute
   '/hiragana/$letter': typeof HiraganaLetterRoute
   '/jlpt/$n': typeof JlptNRoute
@@ -163,6 +187,9 @@ export interface FileRoutesById {
   '/kanji': typeof KanjiRoute
   '/katakana': typeof KatakanaRoute
   '/kotowaza': typeof KotowazaRoute
+  '/sitemap-dynamic.xml': typeof SitemapDynamicDotxmlRoute
+  '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/api/$': typeof ApiSplatRoute
   '/hiragana_/$letter': typeof HiraganaLetterRoute
   '/jlpt_/$n': typeof JlptNRoute
@@ -184,6 +211,9 @@ export interface FileRouteTypes {
     | '/kanji'
     | '/katakana'
     | '/kotowaza'
+    | '/sitemap-dynamic.xml'
+    | '/sitemap-static.xml'
+    | '/sitemap.xml'
     | '/api/$'
     | '/hiragana/$letter'
     | '/jlpt/$n'
@@ -203,6 +233,9 @@ export interface FileRouteTypes {
     | '/kanji'
     | '/katakana'
     | '/kotowaza'
+    | '/sitemap-dynamic.xml'
+    | '/sitemap-static.xml'
+    | '/sitemap.xml'
     | '/api/$'
     | '/hiragana/$letter'
     | '/jlpt/$n'
@@ -222,6 +255,9 @@ export interface FileRouteTypes {
     | '/kanji'
     | '/katakana'
     | '/kotowaza'
+    | '/sitemap-dynamic.xml'
+    | '/sitemap-static.xml'
+    | '/sitemap.xml'
     | '/api/$'
     | '/hiragana_/$letter'
     | '/jlpt_/$n'
@@ -242,6 +278,9 @@ export interface RootRouteChildren {
   KanjiRoute: typeof KanjiRoute
   KatakanaRoute: typeof KatakanaRoute
   KotowazaRoute: typeof KotowazaRoute
+  SitemapDynamicDotxmlRoute: typeof SitemapDynamicDotxmlRoute
+  SitemapStaticDotxmlRoute: typeof SitemapStaticDotxmlRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiSplatRoute: typeof ApiSplatRoute
   HiraganaLetterRoute: typeof HiraganaLetterRoute
   JlptNRoute: typeof JlptNRoute
@@ -253,6 +292,27 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-static.xml': {
+      id: '/sitemap-static.xml'
+      path: '/sitemap-static.xml'
+      fullPath: '/sitemap-static.xml'
+      preLoaderRoute: typeof SitemapStaticDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-dynamic.xml': {
+      id: '/sitemap-dynamic.xml'
+      path: '/sitemap-dynamic.xml'
+      fullPath: '/sitemap-dynamic.xml'
+      preLoaderRoute: typeof SitemapDynamicDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/kotowaza': {
       id: '/kotowaza'
       path: '/kotowaza'
@@ -386,6 +446,9 @@ const rootRouteChildren: RootRouteChildren = {
   KanjiRoute: KanjiRoute,
   KatakanaRoute: KatakanaRoute,
   KotowazaRoute: KotowazaRoute,
+  SitemapDynamicDotxmlRoute: SitemapDynamicDotxmlRoute,
+  SitemapStaticDotxmlRoute: SitemapStaticDotxmlRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiSplatRoute: ApiSplatRoute,
   HiraganaLetterRoute: HiraganaLetterRoute,
   JlptNRoute: JlptNRoute,

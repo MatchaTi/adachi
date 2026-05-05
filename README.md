@@ -69,7 +69,7 @@ bun run test
 
 ## Goals for the future:
 
-- [ ] SEO optimization for better discoverability. (sitemap, robots)
+- [x] SEO optimization for better discoverability. (metadata, Open Graph, canonical URLs, JSON-LD, sitemaps)
 - [ ] Enhance the flashcard functionality with spaced repetition.
 - [ ] Add more interactive writing exercises and quizzes.
 - [ ] Implement local storage or user accounts for progress tracking (day streaks, character mastery, activity like github commit, etc.).

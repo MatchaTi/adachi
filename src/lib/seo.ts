@@ -19,13 +19,15 @@ const siteUrl = (configuredSiteUrl ?? 'http://localhost:3000').replace(
 
 const defaultImage = '/logo512.png';
 
-function toAbsoluteUrl(path: string) {
+export { siteUrl };
+
+export function toAbsoluteUrl(path: string) {
   if (path.startsWith('http://') || path.startsWith('https://')) {
     return path;
   }
 
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-  return `${siteUrl}${normalizedPath}`;
+  return new URL(normalizedPath, `${siteUrl}/`).toString();
 }
 
 export function buildSeoHead({
