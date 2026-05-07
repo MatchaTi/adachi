@@ -33,6 +33,8 @@ type NavLeafItem = {
   subtitle?: string;
   to?:
     | '/'
+    | '/dashboard'
+    | '/character-mastery'
     | '/hiragana'
     | '/katakana'
     | '/kanji'
@@ -56,6 +58,12 @@ type NavTreeItem = NavLeafItem | NavBranchItem;
 
 const NAV_TREE: NavTreeItem[] = [
   { name: 'home', subtitle: 'ホーム', to: '/' },
+  { name: 'dashboard', subtitle: 'progress', to: '/dashboard' },
+  {
+    name: 'character-mastery',
+    subtitle: 'mastery',
+    to: '/character-mastery',
+  },
   { name: 'hiragana', subtitle: 'ひらがな', to: '/hiragana' },
   { name: 'katakana', subtitle: 'カタカナ', to: '/katakana' },
   { name: 'kanji', subtitle: '漢字', to: '/kanji' },

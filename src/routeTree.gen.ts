@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SitemapStaticDotxmlRouteImport } from './routes/sitemap-static[.]xml'
 import { Route as SitemapDynamicDotxmlRouteImport } from './routes/sitemap-dynamic[.]xml'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as KotowazaRouteImport } from './routes/kotowaza'
 import { Route as KatakanaRouteImport } from './routes/katakana'
 import { Route as KanjiRouteImport } from './routes/kanji'
@@ -19,6 +20,8 @@ import { Route as JoyoRouteImport } from './routes/joyo'
 import { Route as JlptRouteImport } from './routes/jlpt'
 import { Route as HiraganaRouteImport } from './routes/hiragana'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CharacterMasteryRouteImport } from './routes/character-mastery'
 import { Route as AnalyzeRouteImport } from './routes/analyze'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -43,6 +46,11 @@ const SitemapStaticDotxmlRoute = SitemapStaticDotxmlRouteImport.update({
 const SitemapDynamicDotxmlRoute = SitemapDynamicDotxmlRouteImport.update({
   id: '/sitemap-dynamic.xml',
   path: '/sitemap-dynamic.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KotowazaRoute = KotowazaRouteImport.update({
@@ -78,6 +86,16 @@ const HiraganaRoute = HiraganaRouteImport.update({
 const DisclaimerRoute = DisclaimerRouteImport.update({
   id: '/disclaimer',
   path: '/disclaimer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CharacterMasteryRoute = CharacterMasteryRouteImport.update({
+  id: '/character-mastery',
+  path: '/character-mastery',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnalyzeRoute = AnalyzeRouteImport.update({
@@ -135,6 +153,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/analyze': typeof AnalyzeRoute
+  '/character-mastery': typeof CharacterMasteryRoute
+  '/dashboard': typeof DashboardRoute
   '/disclaimer': typeof DisclaimerRoute
   '/hiragana': typeof HiraganaRoute
   '/jlpt': typeof JlptRoute
@@ -142,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/kanji': typeof KanjiRoute
   '/katakana': typeof KatakanaRoute
   '/kotowaza': typeof KotowazaRoute
+  '/settings': typeof SettingsRoute
   '/sitemap-dynamic.xml': typeof SitemapDynamicDotxmlRoute
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -157,6 +178,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/analyze': typeof AnalyzeRoute
+  '/character-mastery': typeof CharacterMasteryRoute
+  '/dashboard': typeof DashboardRoute
   '/disclaimer': typeof DisclaimerRoute
   '/hiragana': typeof HiraganaRoute
   '/jlpt': typeof JlptRoute
@@ -164,6 +187,7 @@ export interface FileRoutesByTo {
   '/kanji': typeof KanjiRoute
   '/katakana': typeof KatakanaRoute
   '/kotowaza': typeof KotowazaRoute
+  '/settings': typeof SettingsRoute
   '/sitemap-dynamic.xml': typeof SitemapDynamicDotxmlRoute
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -180,6 +204,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/analyze': typeof AnalyzeRoute
+  '/character-mastery': typeof CharacterMasteryRoute
+  '/dashboard': typeof DashboardRoute
   '/disclaimer': typeof DisclaimerRoute
   '/hiragana': typeof HiraganaRoute
   '/jlpt': typeof JlptRoute
@@ -187,6 +213,7 @@ export interface FileRoutesById {
   '/kanji': typeof KanjiRoute
   '/katakana': typeof KatakanaRoute
   '/kotowaza': typeof KotowazaRoute
+  '/settings': typeof SettingsRoute
   '/sitemap-dynamic.xml': typeof SitemapDynamicDotxmlRoute
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -204,6 +231,8 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/analyze'
+    | '/character-mastery'
+    | '/dashboard'
     | '/disclaimer'
     | '/hiragana'
     | '/jlpt'
@@ -211,6 +240,7 @@ export interface FileRouteTypes {
     | '/kanji'
     | '/katakana'
     | '/kotowaza'
+    | '/settings'
     | '/sitemap-dynamic.xml'
     | '/sitemap-static.xml'
     | '/sitemap.xml'
@@ -226,6 +256,8 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/analyze'
+    | '/character-mastery'
+    | '/dashboard'
     | '/disclaimer'
     | '/hiragana'
     | '/jlpt'
@@ -233,6 +265,7 @@ export interface FileRouteTypes {
     | '/kanji'
     | '/katakana'
     | '/kotowaza'
+    | '/settings'
     | '/sitemap-dynamic.xml'
     | '/sitemap-static.xml'
     | '/sitemap.xml'
@@ -248,6 +281,8 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/analyze'
+    | '/character-mastery'
+    | '/dashboard'
     | '/disclaimer'
     | '/hiragana'
     | '/jlpt'
@@ -255,6 +290,7 @@ export interface FileRouteTypes {
     | '/kanji'
     | '/katakana'
     | '/kotowaza'
+    | '/settings'
     | '/sitemap-dynamic.xml'
     | '/sitemap-static.xml'
     | '/sitemap.xml'
@@ -271,6 +307,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AnalyzeRoute: typeof AnalyzeRoute
+  CharacterMasteryRoute: typeof CharacterMasteryRoute
+  DashboardRoute: typeof DashboardRoute
   DisclaimerRoute: typeof DisclaimerRoute
   HiraganaRoute: typeof HiraganaRoute
   JlptRoute: typeof JlptRoute
@@ -278,6 +316,7 @@ export interface RootRouteChildren {
   KanjiRoute: typeof KanjiRoute
   KatakanaRoute: typeof KatakanaRoute
   KotowazaRoute: typeof KotowazaRoute
+  SettingsRoute: typeof SettingsRoute
   SitemapDynamicDotxmlRoute: typeof SitemapDynamicDotxmlRoute
   SitemapStaticDotxmlRoute: typeof SitemapStaticDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -311,6 +350,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap-dynamic.xml'
       fullPath: '/sitemap-dynamic.xml'
       preLoaderRoute: typeof SitemapDynamicDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kotowaza': {
@@ -360,6 +406,20 @@ declare module '@tanstack/react-router' {
       path: '/disclaimer'
       fullPath: '/disclaimer'
       preLoaderRoute: typeof DisclaimerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/character-mastery': {
+      id: '/character-mastery'
+      path: '/character-mastery'
+      fullPath: '/character-mastery'
+      preLoaderRoute: typeof CharacterMasteryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/analyze': {
@@ -439,6 +499,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AnalyzeRoute: AnalyzeRoute,
+  CharacterMasteryRoute: CharacterMasteryRoute,
+  DashboardRoute: DashboardRoute,
   DisclaimerRoute: DisclaimerRoute,
   HiraganaRoute: HiraganaRoute,
   JlptRoute: JlptRoute,
@@ -446,6 +508,7 @@ const rootRouteChildren: RootRouteChildren = {
   KanjiRoute: KanjiRoute,
   KatakanaRoute: KatakanaRoute,
   KotowazaRoute: KotowazaRoute,
+  SettingsRoute: SettingsRoute,
   SitemapDynamicDotxmlRoute: SitemapDynamicDotxmlRoute,
   SitemapStaticDotxmlRoute: SitemapStaticDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,

@@ -2,13 +2,17 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import type { ErrorComponentProps } from '@tanstack/react-router';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { ArrowLeft, PencilLine, RotateCcw, TriangleAlert } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import { Heading } from '@/components/shared/heading';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { buildSeoHead } from '@/lib/seo';
 import { orpc } from '@/orpc/client';
+import { useWritingProgressStore } from '@/store/writing-progress';
+
+const MASTERY_TARGET = 100;
 
 export const Route = createFileRoute('/kanji_/$letter')({
   head: ({ params }) =>
@@ -120,6 +124,9 @@ function RouteComponent() {
   const [mode, setMode] = useState<'learn' | 'write'>('learn');
   const [isWriterReady, setIsWriterReady] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const addWritingPoint = useWritingProgressStore(
+    (state) => state.addWritingPoint,
+  );
   const writerContainerRef = useRef<HTMLDivElement>(null);
   const writerRef = useRef<{
     animateCharacter: () => unknown;
@@ -128,6 +135,14 @@ function RouteComponent() {
     cancelQuiz: () => void;
   } | null>(null);
   const writerSize = 260;
+  const completeWritingPractice = useCallback(() => {
+    const count = addWritingPoint({ type: 'kanji', character: kanji.kanji });
+    const progress = Math.min((count / MASTERY_TARGET) * 100, 100);
+
+    toast.success(`Writing progress for ${kanji.kanji}`, {
+      description: `${count}/${MASTERY_TARGET} attempts (${Math.round(progress)}%)`,
+    });
+  }, [addWritingPoint, kanji.kanji]);
   const meaningList = Array.isArray(kanji.meanings) ? kanji.meanings : [];
   const onReadingList = Array.isArray(kanji.on_readings)
     ? kanji.on_readings
@@ -209,8 +224,9 @@ function RouteComponent() {
     writer.quiz({
       showHintAfterMisses: 1,
       leniency: 1,
+      onComplete: completeWritingPractice,
     });
-  }, [mode, isWriterReady]);
+  }, [mode, isWriterReady, completeWritingPractice]);
 
   const replayAnimation = () => {
     if (!writerRef.current) {
@@ -230,6 +246,7 @@ function RouteComponent() {
     writerRef.current.quiz({
       showHintAfterMisses: 1,
       leniency: 1,
+      onComplete: completeWritingPractice,
     });
   };
 
