@@ -7,6 +7,7 @@ import {
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { ScrollToTopButton } from '@/components/shared/scroll-to-top-button';
+import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { PROJECT_NAME } from '@/infra/lib/constants';
 import appCss from '../styles.css?url';
@@ -55,6 +56,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <Footer />
         </div>
         <ScrollToTopButton />
+        <Toaster position='top-right' />
         <Scripts />
       </body>
     </html>
