@@ -21,6 +21,11 @@ import { buildSeoHead } from '@/lib/seo';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/joyo_/$grade')({
+  validateSearch: (search: Record<string, unknown>) => ({
+    ...(typeof search.q === 'string' && search.q.length > 0
+      ? { q: search.q }
+      : {}),
+  }),
   head: ({ params }) =>
     buildSeoHead({
       title: `Joyo Grade ${params.grade} Kanji - Adachi`,
@@ -32,10 +37,11 @@ export const Route = createFileRoute('/joyo_/$grade')({
 
 function RouteComponent() {
   const { grade } = Route.useParams();
+  const { q: search = '' } = Route.useSearch();
+  const navigate = Route.useNavigate();
   const parsedGrade = Number(grade);
   const isValidGrade =
     Number.isInteger(parsedGrade) && parsedGrade >= 1 && parsedGrade <= 6;
-  const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 300);
   const [shuffleCount, setShuffleCount] = useState(0);
   const [isBackVisible, setIsBackVisible] = useState(false);
@@ -121,7 +127,12 @@ function RouteComponent() {
                 className='pl-9'
                 aria-label='Search Joyo kanji'
                 value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                onChange={(event) =>
+                  navigate({
+                    search: event.target.value ? { q: event.target.value } : {},
+                    replace: true,
+                  })
+                }
               />
             </div>
             <div className='flex flex-wrap items-center gap-2'>
@@ -230,7 +241,11 @@ function RouteComponent() {
                   variant={itemGrade === parsedGrade ? 'default' : 'outline'}
                   size='sm'
                 >
-                  <Link to='/joyo/$grade' params={{ grade: String(itemGrade) }}>
+                  <Link
+                    to='/joyo/$grade'
+                    params={{ grade: String(itemGrade) }}
+                    search={search ? { q: search } : {}}
+                  >
                     G{itemGrade}
                   </Link>
                 </Button>

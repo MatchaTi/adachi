@@ -20,6 +20,11 @@ import { buildSeoHead } from '@/lib/seo';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/katakana')({
+  validateSearch: (search: Record<string, unknown>) => ({
+    ...(typeof search.q === 'string' && search.q.length > 0
+      ? { q: search.q }
+      : {}),
+  }),
   head: () =>
     buildSeoHead({
       title: 'Katakana - Adachi',
@@ -52,7 +57,8 @@ function RouteComponent() {
   const { data: katakana } = useSuspenseQuery(
     orpc.letter.getAllKatakana.queryOptions(),
   );
-  const [search, setSearch] = useState('');
+  const { q: search = '' } = Route.useSearch();
+  const navigate = Route.useNavigate();
   const [debouncedSearch] = useDebounce(search, 300);
   const [isBackVisible, setIsBackVisible] = useState(false);
   const [excludeCharacter, setExcludeCharacter] = useState<string>();
@@ -96,7 +102,12 @@ function RouteComponent() {
               className='pl-9'
               aria-label='Search katakana'
               value={search}
-              onChange={(event) => setSearch(event.target.value)}
+              onChange={(event) =>
+                navigate({
+                  search: event.target.value ? { q: event.target.value } : {},
+                  replace: true,
+                })
+              }
             />
           </div>
 

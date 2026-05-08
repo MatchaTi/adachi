@@ -21,6 +21,11 @@ import { buildSeoHead } from '@/lib/seo';
 import { orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/jlpt_/$n')({
+  validateSearch: (search: Record<string, unknown>) => ({
+    ...(typeof search.q === 'string' && search.q.length > 0
+      ? { q: search.q }
+      : {}),
+  }),
   head: ({ params }) =>
     buildSeoHead({
       title: `JLPT N${params.n} Kanji - Adachi`,
@@ -32,9 +37,10 @@ export const Route = createFileRoute('/jlpt_/$n')({
 
 function RouteComponent() {
   const { n } = Route.useParams();
+  const { q: search = '' } = Route.useSearch();
+  const navigate = Route.useNavigate();
   const level = Number(n);
   const isValidLevel = Number.isInteger(level) && level >= 1 && level <= 5;
-  const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 300);
   const [shuffleCount, setShuffleCount] = useState(0);
   const [isBackVisible, setIsBackVisible] = useState(false);
@@ -120,7 +126,12 @@ function RouteComponent() {
                 className='pl-9'
                 aria-label='Search JLPT kanji'
                 value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                onChange={(event) =>
+                  navigate({
+                    search: event.target.value ? { q: event.target.value } : {},
+                    replace: true,
+                  })
+                }
               />
             </div>
             <div className='flex flex-wrap items-center gap-2'>
@@ -227,7 +238,11 @@ function RouteComponent() {
                   variant={itemLevel === level ? 'default' : 'outline'}
                   size='sm'
                 >
-                  <Link to='/jlpt/$n' params={{ n: String(itemLevel) }}>
+                  <Link
+                    to='/jlpt/$n'
+                    params={{ n: String(itemLevel) }}
+                    search={search ? { q: search } : {}}
+                  >
                     N{itemLevel}
                   </Link>
                 </Button>

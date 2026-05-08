@@ -21,6 +21,11 @@ import { buildSeoHead } from '@/lib/seo';
 import { client, orpc } from '@/orpc/client';
 
 export const Route = createFileRoute('/kanji')({
+  validateSearch: (search: Record<string, unknown>) => ({
+    ...(typeof search.q === 'string' && search.q.length > 0
+      ? { q: search.q }
+      : {}),
+  }),
   head: () =>
     buildSeoHead({
       title: 'Kanji - Adachi',
@@ -33,7 +38,8 @@ export const Route = createFileRoute('/kanji')({
 });
 
 function RouteComponent() {
-  const [search, setSearch] = useState('');
+  const { q: search = '' } = Route.useSearch();
+  const navigate = Route.useNavigate();
   const normalizedQuery = search.trim();
   const [query] = useDebounce(normalizedQuery, 300);
   const loadMoreRef = useRef<HTMLDivElement>(null);
@@ -128,7 +134,12 @@ function RouteComponent() {
               className='pl-9'
               aria-label='Search kanji'
               value={search}
-              onChange={(event) => setSearch(event.target.value)}
+              onChange={(event) =>
+                navigate({
+                  search: event.target.value ? { q: event.target.value } : {},
+                  replace: true,
+                })
+              }
             />
           </div>
 
