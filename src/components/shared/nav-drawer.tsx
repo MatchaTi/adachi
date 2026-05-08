@@ -35,6 +35,7 @@ type NavLeafItem = {
     | '/'
     | '/dashboard'
     | '/character-mastery'
+    | '/quiz'
     | '/hiragana'
     | '/katakana'
     | '/kanji'
@@ -64,6 +65,7 @@ const NAV_TREE: NavTreeItem[] = [
     subtitle: 'mastery',
     to: '/character-mastery',
   },
+  { name: 'quiz', subtitle: '練習', to: '/quiz' },
   { name: 'hiragana', subtitle: 'ひらがな', to: '/hiragana' },
   { name: 'katakana', subtitle: 'カタカナ', to: '/katakana' },
   { name: 'kanji', subtitle: '漢字', to: '/kanji' },

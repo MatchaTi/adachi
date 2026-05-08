@@ -22,7 +22,9 @@ const MASTERY_TARGET = 100;
 
 type MasteryItem = {
   character: string;
-  count: number;
+  writingCount: number;
+  quizCount: number;
+  totalCount: number;
   progress: number;
   isMastered: boolean;
 };
@@ -54,6 +56,7 @@ const SECTION_META: Record<
 
 const getMasterySections = (
   completedCharacters: Record<string, number>,
+  quizCompletedCharacters: Record<string, number>,
 ): MasterySection[] => {
   const sections: Record<WritingCharacterType, MasteryItem[]> = {
     hiragana: [],
@@ -61,25 +64,35 @@ const getMasterySections = (
     kanji: [],
   };
 
-  for (const [key, count] of Object.entries(completedCharacters)) {
+  const characterKeys = new Set([
+    ...Object.keys(completedCharacters),
+    ...Object.keys(quizCompletedCharacters),
+  ]);
+
+  for (const key of characterKeys) {
+    const writingCount = completedCharacters[key] ?? 0;
+    const quizCount = quizCompletedCharacters[key] ?? 0;
+    const totalCount = writingCount + quizCount;
     const [type, character] = key.split(':');
 
-    if (!isWritingCharacterType(type) || !character) {
+    if (!isWritingCharacterType(type) || !character || totalCount === 0) {
       continue;
     }
 
     sections[type].push({
       character,
-      count,
-      progress: Math.min((count / MASTERY_TARGET) * 100, 100),
-      isMastered: count >= MASTERY_TARGET,
+      writingCount,
+      quizCount,
+      totalCount,
+      progress: Math.min((totalCount / MASTERY_TARGET) * 100, 100),
+      isMastered: totalCount >= MASTERY_TARGET,
     });
   }
 
   return (Object.keys(sections) as WritingCharacterType[]).map((type) => ({
     type,
     ...SECTION_META[type],
-    items: sections[type].sort((a, b) => b.count - a.count),
+    items: sections[type].sort((a, b) => b.totalCount - a.totalCount),
   }));
 };
 
@@ -92,7 +105,13 @@ function RouteComponent() {
   const completedCharacters = useWritingProgressStore(
     (state) => state.completedCharacters,
   );
-  const sections = getMasterySections(completedCharacters);
+  const quizCompletedCharacters = useWritingProgressStore(
+    (state) => state.quizCompletedCharacters,
+  );
+  const sections = getMasterySections(
+    completedCharacters,
+    quizCompletedCharacters,
+  );
   const totalPracticed = sections.reduce(
     (total, section) => total + section.items.length,
     0,
@@ -114,7 +133,8 @@ function RouteComponent() {
         </h1>
         <p className='max-w-2xl text-sm leading-7 text-muted-foreground'>
           Track mastery for every character you have practiced. A character is
-          considered mastered after 100 completed writing attempts.
+          considered mastered after 100 combined writing completions and correct
+          quiz answers.
         </p>
       </section>
 
@@ -197,7 +217,7 @@ function CharacterMasteryCard({
               {item.isMastered ? 'Mastered' : `${Math.round(item.progress)}%`}
             </Badge>
             <span className='text-xs text-muted-foreground'>
-              {item.count}/{MASTERY_TARGET}
+              {item.totalCount}/{MASTERY_TARGET}
             </span>
           </div>
 
@@ -206,6 +226,10 @@ function CharacterMasteryCard({
           </div>
 
           <Progress value={item.progress} />
+
+          <p className='text-xs text-muted-foreground'>
+            W {item.writingCount} / Q {item.quizCount}
+          </p>
         </CardContent>
       </Card>
     </Link>

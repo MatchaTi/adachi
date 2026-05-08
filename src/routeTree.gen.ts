@@ -13,6 +13,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SitemapStaticDotxmlRouteImport } from './routes/sitemap-static[.]xml'
 import { Route as SitemapDynamicDotxmlRouteImport } from './routes/sitemap-dynamic[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as KotowazaRouteImport } from './routes/kotowaza'
 import { Route as KatakanaRouteImport } from './routes/katakana'
 import { Route as KanjiRouteImport } from './routes/kanji'
@@ -51,6 +52,11 @@ const SitemapDynamicDotxmlRoute = SitemapDynamicDotxmlRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizRoute = QuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KotowazaRoute = KotowazaRouteImport.update({
@@ -162,6 +168,7 @@ export interface FileRoutesByFullPath {
   '/kanji': typeof KanjiRoute
   '/katakana': typeof KatakanaRoute
   '/kotowaza': typeof KotowazaRoute
+  '/quiz': typeof QuizRoute
   '/settings': typeof SettingsRoute
   '/sitemap-dynamic.xml': typeof SitemapDynamicDotxmlRoute
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
@@ -187,6 +194,7 @@ export interface FileRoutesByTo {
   '/kanji': typeof KanjiRoute
   '/katakana': typeof KatakanaRoute
   '/kotowaza': typeof KotowazaRoute
+  '/quiz': typeof QuizRoute
   '/settings': typeof SettingsRoute
   '/sitemap-dynamic.xml': typeof SitemapDynamicDotxmlRoute
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
@@ -213,6 +221,7 @@ export interface FileRoutesById {
   '/kanji': typeof KanjiRoute
   '/katakana': typeof KatakanaRoute
   '/kotowaza': typeof KotowazaRoute
+  '/quiz': typeof QuizRoute
   '/settings': typeof SettingsRoute
   '/sitemap-dynamic.xml': typeof SitemapDynamicDotxmlRoute
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
@@ -240,6 +249,7 @@ export interface FileRouteTypes {
     | '/kanji'
     | '/katakana'
     | '/kotowaza'
+    | '/quiz'
     | '/settings'
     | '/sitemap-dynamic.xml'
     | '/sitemap-static.xml'
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/kanji'
     | '/katakana'
     | '/kotowaza'
+    | '/quiz'
     | '/settings'
     | '/sitemap-dynamic.xml'
     | '/sitemap-static.xml'
@@ -290,6 +301,7 @@ export interface FileRouteTypes {
     | '/kanji'
     | '/katakana'
     | '/kotowaza'
+    | '/quiz'
     | '/settings'
     | '/sitemap-dynamic.xml'
     | '/sitemap-static.xml'
@@ -316,6 +328,7 @@ export interface RootRouteChildren {
   KanjiRoute: typeof KanjiRoute
   KatakanaRoute: typeof KatakanaRoute
   KotowazaRoute: typeof KotowazaRoute
+  QuizRoute: typeof QuizRoute
   SettingsRoute: typeof SettingsRoute
   SitemapDynamicDotxmlRoute: typeof SitemapDynamicDotxmlRoute
   SitemapStaticDotxmlRoute: typeof SitemapStaticDotxmlRoute
@@ -357,6 +370,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz': {
+      id: '/quiz'
+      path: '/quiz'
+      fullPath: '/quiz'
+      preLoaderRoute: typeof QuizRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kotowaza': {
@@ -508,6 +528,7 @@ const rootRouteChildren: RootRouteChildren = {
   KanjiRoute: KanjiRoute,
   KatakanaRoute: KatakanaRoute,
   KotowazaRoute: KotowazaRoute,
+  QuizRoute: QuizRoute,
   SettingsRoute: SettingsRoute,
   SitemapDynamicDotxmlRoute: SitemapDynamicDotxmlRoute,
   SitemapStaticDotxmlRoute: SitemapStaticDotxmlRoute,

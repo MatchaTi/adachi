@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type WritingCharacterType = 'hiragana' | 'katakana' | 'kanji';
+export type QuizCharacterType = WritingCharacterType;
 
 export type WritingProgressDay = {
   date: string;
@@ -11,19 +12,28 @@ export type WritingProgressDay = {
 export type WritingProgressData = {
   dailyProgress: Record<string, number>;
   completedCharacters: Record<string, number>;
+  quizDailyProgress?: Record<string, number>;
+  quizCompletedCharacters?: Record<string, number>;
 };
 
 type WritingProgressState = {
   dailyProgress: Record<string, number>;
   completedCharacters: Record<string, number>;
+  quizDailyProgress: Record<string, number>;
+  quizCompletedCharacters: Record<string, number>;
   addWritingPoint: (params: {
     type: WritingCharacterType;
+    character: string;
+  }) => number;
+  addQuizPoint: (params: {
+    type: QuizCharacterType;
     character: string;
   }) => number;
   exportProgressData: () => WritingProgressData;
   getDailyProgress: () => WritingProgressDay[];
   getCurrentDayStreak: () => number;
   getTotalWritingPoints: () => number;
+  getTotalQuizPoints: () => number;
   importProgressData: (data: WritingProgressData) => void;
   resetProgressData: () => void;
 };
@@ -69,6 +79,8 @@ export const useWritingProgressStore = create<WritingProgressState>()(
     (set, get) => ({
       dailyProgress: {},
       completedCharacters: {},
+      quizDailyProgress: {},
+      quizCompletedCharacters: {},
       addWritingPoint: ({ type, character }) => {
         const date = getLocalDateKey();
         const characterKey = getCharacterKey(type, character);
@@ -88,12 +100,38 @@ export const useWritingProgressStore = create<WritingProgressState>()(
 
         return nextCharacterCount;
       },
+      addQuizPoint: ({ type, character }) => {
+        const date = getLocalDateKey();
+        const characterKey = getCharacterKey(type, character);
+        const nextCharacterCount =
+          (get().quizCompletedCharacters[characterKey] ?? 0) + 1;
+
+        set((state) => ({
+          quizDailyProgress: {
+            ...state.quizDailyProgress,
+            [date]: (state.quizDailyProgress[date] ?? 0) + 1,
+          },
+          quizCompletedCharacters: {
+            ...state.quizCompletedCharacters,
+            [characterKey]: nextCharacterCount,
+          },
+        }));
+
+        return nextCharacterCount;
+      },
       exportProgressData: () => {
-        const { dailyProgress, completedCharacters } = get();
+        const {
+          dailyProgress,
+          completedCharacters,
+          quizDailyProgress,
+          quizCompletedCharacters,
+        } = get();
 
         return {
           dailyProgress,
           completedCharacters,
+          quizDailyProgress,
+          quizCompletedCharacters,
         };
       },
       getDailyProgress: () =>
@@ -106,17 +144,44 @@ export const useWritingProgressStore = create<WritingProgressState>()(
           (total, count) => total + count,
           0,
         ),
-      importProgressData: ({ dailyProgress, completedCharacters }) => {
-        set({ dailyProgress, completedCharacters });
+      getTotalQuizPoints: () =>
+        Object.values(get().quizDailyProgress).reduce(
+          (total, count) => total + count,
+          0,
+        ),
+      importProgressData: ({
+        dailyProgress,
+        completedCharacters,
+        quizDailyProgress = {},
+        quizCompletedCharacters = {},
+      }) => {
+        set({
+          dailyProgress,
+          completedCharacters,
+          quizDailyProgress,
+          quizCompletedCharacters,
+        });
       },
       resetProgressData: () => {
-        set({ dailyProgress: {}, completedCharacters: {} });
+        set({
+          dailyProgress: {},
+          completedCharacters: {},
+          quizDailyProgress: {},
+          quizCompletedCharacters: {},
+        });
       },
     }),
     {
       name: 'adachi-writing-progress',
       storage: createJSONStorage(() => localStorage),
-      version: 1,
+      version: 2,
+      migrate: (persistedState) => ({
+        dailyProgress: {},
+        completedCharacters: {},
+        quizDailyProgress: {},
+        quizCompletedCharacters: {},
+        ...(persistedState as Partial<WritingProgressState>),
+      }),
     },
   ),
 );

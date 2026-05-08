@@ -58,6 +58,12 @@ const parseProgressData = (value: unknown): WritingProgressData | null => {
   return {
     dailyProgress: data.dailyProgress,
     completedCharacters: data.completedCharacters,
+    quizDailyProgress: isRecordOfNumbers(data.quizDailyProgress)
+      ? data.quizDailyProgress
+      : {},
+    quizCompletedCharacters: isRecordOfNumbers(data.quizCompletedCharacters)
+      ? data.quizCompletedCharacters
+      : {},
   };
 };
 
@@ -76,10 +82,20 @@ function RouteComponent() {
   const totalWritingPoints = useWritingProgressStore((state) =>
     state.getTotalWritingPoints(),
   );
-  const practicedCharacterCount = useWritingProgressStore(
-    (state) => Object.keys(state.completedCharacters).length,
+  const totalQuizPoints = useWritingProgressStore((state) =>
+    state.getTotalQuizPoints(),
   );
-  const hasProgressData = totalWritingPoints > 0 || practicedCharacterCount > 0;
+  const practicedCharacterCount = useWritingProgressStore(
+    (state) =>
+      new Set([
+        ...Object.keys(state.completedCharacters),
+        ...Object.keys(state.quizCompletedCharacters),
+      ]).size,
+  );
+  const hasProgressData =
+    totalWritingPoints > 0 ||
+    totalQuizPoints > 0 ||
+    practicedCharacterCount > 0;
 
   const exportJson = () => {
     const payload = {
@@ -147,8 +163,8 @@ function RouteComponent() {
         </p>
         <h1 className='text-4xl leading-tight sm:text-5xl'>Progress Data</h1>
         <p className='max-w-2xl text-sm leading-7 text-muted-foreground'>
-          Export, import, or delete your local writing progress. Export and
-          import use JSON files so your progress can be backed up manually.
+          Export, import, or delete your local writing and quiz progress. Export
+          and import use JSON files so your progress can be backed up manually.
         </p>
       </section>
 
@@ -166,6 +182,13 @@ function RouteComponent() {
             <CardTitle className='text-4xl'>
               {practicedCharacterCount}
             </CardTitle>
+          </CardHeader>
+        </Card>
+
+        <Card className='rounded-none border-border bg-card/70 shadow-none'>
+          <CardHeader>
+            <CardDescription>Quiz Points</CardDescription>
+            <CardTitle className='text-4xl'>{totalQuizPoints}</CardTitle>
           </CardHeader>
         </Card>
       </section>

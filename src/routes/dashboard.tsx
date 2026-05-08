@@ -63,16 +63,40 @@ const buildWritingActivities = (
   });
 };
 
+const mergeDailyProgress = (
+  writingProgress: Record<string, number>,
+  quizProgress: Record<string, number>,
+) => {
+  const merged = { ...writingProgress };
+
+  for (const [date, count] of Object.entries(quizProgress)) {
+    merged[date] = (merged[date] ?? 0) + count;
+  }
+
+  return merged;
+};
+
 function RouteComponent() {
   const dailyProgress = useWritingProgressStore((state) => state.dailyProgress);
+  const quizDailyProgress = useWritingProgressStore(
+    (state) => state.quizDailyProgress,
+  );
   const totalWritingPoints = useWritingProgressStore((state) =>
     state.getTotalWritingPoints(),
+  );
+  const totalQuizPoints = useWritingProgressStore((state) =>
+    state.getTotalQuizPoints(),
   );
   const currentDayStreak = useWritingProgressStore((state) =>
     state.getCurrentDayStreak(),
   );
-  const activities = buildWritingActivities(dailyProgress);
-  const todayCount = dailyProgress[getLocalDateKey()] ?? 0;
+  const mergedDailyProgress = mergeDailyProgress(
+    dailyProgress,
+    quizDailyProgress,
+  );
+  const activities = buildWritingActivities(mergedDailyProgress);
+  const todayWritingCount = dailyProgress[getLocalDateKey()] ?? 0;
+  const todayQuizCount = quizDailyProgress[getLocalDateKey()] ?? 0;
 
   return (
     <main className='mx-auto flex w-full max-w-7xl flex-col gap-8'>
@@ -82,8 +106,8 @@ function RouteComponent() {
         </p>
         <h1 className='text-4xl leading-tight sm:text-5xl'>Writing Progress</h1>
         <p className='max-w-2xl text-sm leading-7 text-muted-foreground'>
-          Track your consistency while practicing Hiragana, Katakana, and Kanji
-          writing. Every completed writing quiz adds 1 point to that day.
+          Track your consistency while practicing Hiragana, Katakana, and Kanji.
+          Writing completions and correct quiz answers both add daily progress.
         </p>
       </section>
 
@@ -92,8 +116,10 @@ function RouteComponent() {
           <p className='text-xs tracking-[0.2em] text-muted-foreground uppercase'>
             Today
           </p>
-          <p className='mt-3 text-4xl leading-none'>{todayCount}</p>
-          <p className='mt-2 text-sm text-muted-foreground'>writing points</p>
+          <p className='mt-3 text-4xl leading-none'>
+            {todayWritingCount + todayQuizCount}
+          </p>
+          <p className='mt-2 text-sm text-muted-foreground'>points today</p>
         </Card>
 
         <Card className='rounded-none border-border bg-card/70 p-4 shadow-none'>
@@ -106,10 +132,18 @@ function RouteComponent() {
 
         <Card className='rounded-none border-border bg-card/70 p-4 shadow-none'>
           <p className='text-xs tracking-[0.2em] text-muted-foreground uppercase'>
-            Total
+            Writing
           </p>
           <p className='mt-3 text-4xl leading-none'>{totalWritingPoints}</p>
           <p className='mt-2 text-sm text-muted-foreground'>saved points</p>
+        </Card>
+
+        <Card className='rounded-none border-border bg-card/70 p-4 shadow-none'>
+          <p className='text-xs tracking-[0.2em] text-muted-foreground uppercase'>
+            Quiz
+          </p>
+          <p className='mt-3 text-4xl leading-none'>{totalQuizPoints}</p>
+          <p className='mt-2 text-sm text-muted-foreground'>correct answers</p>
         </Card>
       </section>
 
@@ -127,7 +161,7 @@ function RouteComponent() {
         <ContributionGraph
           data={activities}
           labels={{
-            totalCount: '{{count}} writing points in {{year}}',
+            totalCount: '{{count}} practice points in {{year}}',
             legend: { less: 'Less', more: 'More' },
           }}
         >

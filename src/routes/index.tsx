@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import {
   Book,
+  Brain,
   Languages,
   Layers,
   MessageSquareText,
@@ -22,7 +23,7 @@ export const Route = createFileRoute('/')({
     buildSeoHead({
       title: PROJECT_NAME,
       description:
-        'Learn Japanese scripts with searchable character grids, writing practice, flashcard drills, and sentence analysis.',
+        'Learn Japanese scripts with searchable character grids, writing practice, flashcard drills, quiz progress, and sentence analysis.',
       path: '/',
     }),
   component: App,
@@ -46,6 +47,12 @@ const FEATURE_ITEMS = [
     description:
       'Flip random cards for Hiragana, Katakana, and Kanji to train reading recall quickly',
     icon: Layers,
+  },
+  {
+    title: 'Quiz Practice',
+    description:
+      'Test kana and kanji recall with multiple choice or typed answers, then track progress in mastery',
+    icon: Brain,
   },
   {
     title: 'JLPT Kanji Sets',
@@ -77,6 +84,7 @@ const NAV_ITEMS = [
   { label: 'あ Hiragana', to: '/hiragana' },
   { label: 'ア Katakana', to: '/katakana' },
   { label: '漢 Kanji', to: '/kanji' },
+  { label: '練習 Quiz', to: '/quiz' },
   { label: '常 Joyo', to: '/joyo' },
   { label: 'ことわざ Kotowaza', to: '/kotowaza' },
   { label: 'JLPT Kanji', to: '/jlpt' },
@@ -85,7 +93,7 @@ const NAV_ITEMS = [
 
 function App() {
   const description =
-    'Learn Japanese scripts with searchable character grids, writing practice, flashcard drills, and sentence analysis.';
+    'Learn Japanese scripts with searchable character grids, writing practice, flashcard drills, quiz progress, and sentence analysis.';
 
   return (
     <main className='space-y-24'>
