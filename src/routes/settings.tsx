@@ -193,53 +193,52 @@ function RouteComponent() {
         </Card>
       </section>
 
-      <section className='grid gap-4 lg:grid-cols-2'>
-        <Card className='rounded-none border-border bg-card/70 shadow-none'>
-          <CardHeader>
-            <CardTitle>Export JSON</CardTitle>
-            <CardDescription>
-              Download your writing progress as a JSON backup file.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={exportJson} className='w-full'>
-              <Download />
-              Export Progress
-            </Button>
-          </CardContent>
-        </Card>
+      <Card className='rounded-none border-border bg-card/70 shadow-none'>
+        <CardHeader>
+          <CardTitle>Export JSON</CardTitle>
+          <CardDescription>
+            Download your writing progress as a JSON backup file.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button onClick={exportJson}>
+            <Download />
+            Export Progress
+          </Button>
+        </CardContent>
+      </Card>
 
-        <Card className='rounded-none border-border bg-card/70 shadow-none'>
-          <CardHeader>
-            <CardTitle>Import JSON</CardTitle>
-            <CardDescription>
-              Restore progress from a previously exported JSON file.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className='flex flex-col gap-3'>
-            <Input
-              ref={fileInputRef}
-              type='file'
-              accept='application/json,.json'
-              onChange={(event) => void importJson(event.target.files?.[0])}
-            />
-            {importFileName ? (
-              <p className='text-xs text-muted-foreground'>
-                Last selected: {importFileName}
-              </p>
-            ) : null}
-            <Button
-              type='button'
-              variant='outline'
-              onClick={() => fileInputRef.current?.click()}
-              className='w-full'
-            >
-              <Upload />
-              Choose JSON File
-            </Button>
-          </CardContent>
-        </Card>
-      </section>
+      <Card className='rounded-none border-border bg-card/70 shadow-none'>
+        <CardHeader>
+          <CardTitle>Import JSON</CardTitle>
+          <CardDescription>
+            Restore progress from a previously exported JSON file.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className='flex flex-col gap-3'>
+          <Input
+            ref={fileInputRef}
+            type='file'
+            accept='application/json,.json'
+            onChange={(event) => void importJson(event.target.files?.[0])}
+            className='w-fit'
+          />
+          {importFileName ? (
+            <p className='text-xs text-muted-foreground'>
+              Last selected: {importFileName}
+            </p>
+          ) : null}
+          <Button
+            type='button'
+            variant='outline'
+            onClick={() => fileInputRef.current?.click()}
+            className='w-fit'
+          >
+            <Upload />
+            Choose JSON File
+          </Button>
+        </CardContent>
+      </Card>
 
       <section>
         <Card className='rounded-none border-destructive/50 bg-card/70 shadow-none'>
