@@ -272,7 +272,6 @@ export function NavDrawer() {
           </div>
         </div>
         <DrawerFooter>
-          {/* TODO: add tip page for users to support the project */}
           <ThemeToggle />
           <Button asChild>
             <a
